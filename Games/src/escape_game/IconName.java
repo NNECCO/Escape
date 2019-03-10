@@ -9,8 +9,9 @@ public class IconName {
 	//dk
 	public static final String DK_JSR1_KEY = "DK-和室1の鍵";
 	public static final String JUENDAMA = "十円玉";
-	public static final String TAP = "懐中電灯";
+	public static final String TAP = "蛇口";
 	public static final String TUNAKAN = "ツナ缶";
+	public static final String YUKASHITA_HINT = "何かのヒント";
 	//japanese-style-room2
 	public static final String TUTU = "筒";
 	public static final String YUKASITA_KEY ="床下収納の鍵";

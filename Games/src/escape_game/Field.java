@@ -88,4 +88,10 @@ public abstract class Field  {
 	 * flagの値をtrueにする
 	 */
 	abstract void setFlagTrue(String flagString);
+
+	/**
+	 * flagの値がtrueのデータリストを返す
+	 */
+	abstract ArrayList<String> getTrueFlags();
+
 }

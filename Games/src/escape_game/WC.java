@@ -3,6 +3,7 @@ package escape_game;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class WC extends Field{
 
@@ -224,4 +225,24 @@ public class WC extends Field{
 
 	}
 
+	@Override
+	ArrayList<String> getTrueFlags() {
+		ArrayList<String> trueFlags = new ArrayList<String>();
+		if (isDkDoorOpen) {
+			trueFlags.add("isDkDoorOpen");
+		}
+		if (isCheckedWindow) {
+			trueFlags.add("isCheckedWindow");
+		}
+		if (isCheckedSenmendai) {
+			trueFlags.add("isCheckedSenmendai");
+		}
+		if (isGotTriangleHint) {
+			trueFlags.add("isGotTriangleHint");
+		}
+		if (isGotDatuijoKey) {
+			trueFlags.add("isGotDatuijoKey");
+		}
+		return trueFlags;
+	}
 }

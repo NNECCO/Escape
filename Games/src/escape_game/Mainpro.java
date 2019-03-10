@@ -20,8 +20,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -90,6 +88,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	Button button_show_bag_next = new Button("next");
 	Button button_show_bag_close = new Button("close");//show-bag画面のcloseボタン
 	Button button_show_trophy_close = new Button("close");//show-hint画面のcloseボタン
+	private Button saveDataButton = new Button("data save[s]");//show-hint画面のcloseボタン
+
 	//バッグにあるアイテム使用ボタン
 	Button[] button_use_item = new Button[5];
 	boolean is_show_buttons = false;
@@ -129,7 +129,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	Image icon_triangle_hint = null;
 	//その他
 	Image title_gazo = null;//title用画像
-	BufferedReader save_data = null;
+
 	//ここまで画像
 	ArrayList<String> message = new ArrayList<String>();//messageメッセージの保存
 	int shown_message_length = 0;//実際に出力するメッセージの行数
@@ -144,12 +144,20 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 
 	//ex) examine_range= 50 -> 現地点 ~ 現地点から50ポイント離れた地点
 
+	// セーブ機能管理クラスのインスタンス
+	private SaveDataManager mSaveDataManager;
+
+	//部屋のリスト
+	ArrayList<String> roomStrList = new ArrayList<String>();
+
 	public void init() {
 		//画面を500,500にセット
 		setSize(screen_size_x, screen_size_y);
 		for (int bIndex = 0;bIndex < button_use_item.length;bIndex++) {
 			button_use_item[bIndex] = new Button("使う");
 		}
+		//インスタンス初期化
+		mSaveDataManager = new SaveDataManager(this);
 		//マップ
 		westernStyleRoom = new WesternStyleRoom(this);
 		dk = new Dk(this);
@@ -212,6 +220,15 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		//wc
 		name_to_icon.put(IconName.DK_DATUIJO_KEY, icon_datuijo_key);
 		name_to_icon.put(IconName.TRIANGLE_HINT, icon_triangle_hint);
+		//部屋名
+		roomStrList.add("WesternStyleRoom");
+		roomStrList.add("Dk");
+		roomStrList.add("DkTop");
+		roomStrList.add("Entrance");
+		roomStrList.add("JapaneseStyleRoom1");
+		roomStrList.add("JapaneseStyleRoom2");
+		roomStrList.add("Datuijo");
+		roomStrList.add("WC");
 		//ここまで要素の追加
 		back = createImage(screen_size_x+2000,screen_size_y+1000);
 		buffer = back.getGraphics();
@@ -223,6 +240,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		add(button_show_bag_next);
 		add(button_show_bag_close);
 		add(button_show_trophy_close);
+		add(saveDataButton);
 		for (int bIndex = 0;bIndex < button_use_item.length;bIndex++) {
 			add(button_use_item[bIndex]);
 		}
@@ -250,6 +268,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		button_show_trophy_close.addMouseListener(this);
 		button_show_trophy_close.addMouseMotionListener(this);
 		button_show_trophy_close.addKeyListener(this);
+		saveDataButton.addMouseListener(this);
+		saveDataButton.addMouseMotionListener(this);
+		saveDataButton.addKeyListener(this);
 		for (int bIndex = 0;bIndex < button_use_item.length;bIndex++) {
 			button_use_item[bIndex].addMouseListener(this);
 			button_use_item[bIndex].addMouseMotionListener(this);
@@ -275,6 +296,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			button_show_bag_next.setLocation(screen_size_x + 2000, screen_size_y + 100);
 			button_show_bag_close.setLocation(screen_size_x + 2000, screen_size_y + 100);
 			button_show_trophy_close.setLocation(screen_size_x + 2000, screen_size_y + 100);
+			saveDataButton.setLocation(screen_size_x + 2000, screen_size_y + 100);
 			for (int bIndex = 0; bIndex < button_use_item.length; bIndex++) {
 				button_use_item[bIndex].setLocation(screen_size_x + 2000, screen_size_y + 100);
 			}
@@ -342,13 +364,23 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			;
 		else {
 			clean_setup();
-			show_current_time();
+			showSaveDataButton();
+			
+			// 時間表示は不要なためコメントアウト
+			// show_current_time();
 		}
 
 		is_next = false;
 		if (screen_error == true)
 			show_screen_error();
 		g.drawImage(back, 0, 0, this);
+	}
+
+	// セーブボタンを配置する
+	private void showSaveDataButton() {
+		saveDataButton.setLocation(screen_size_x - 100 + 1, screen_size_y - 100 + 1);
+		saveDataButton.setSize(100 - 2, 50 - 2);
+		buffer.drawLine(400, 400, 400, 500);
 	}
 
 	void show_current_time() {
@@ -670,7 +702,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 					tuto.text_index = 0;
 					text = tuto.return_text();
 				} else if (title.click_where(point.x, point.y) == "continue") {
-					boolean is_comp = read_savedata();
+					boolean is_comp = mSaveDataManager.readSaveData();
 					if (is_comp == false) {
 						screen_error = true;
 						screen_error_message = "データを読み込めませんでした！！";
@@ -695,6 +727,10 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						now_field.text_index++;
 						text = now_field.texts.get(now_field.text_index);
 					}
+				}
+			} else if (e.getSource() == saveDataButton) {
+				if(!mSaveDataManager.writeSaveData()) {
+					System.out.println("save data fail");
 				}
 			}
 		}
@@ -1120,7 +1156,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			 */
 			case KeyEvent.VK_2:
 				if (screenMode.equals("Title")) { //つづきから
-					boolean is_comp = read_savedata();
+					boolean is_comp = mSaveDataManager.readSaveData();
 					if (is_comp == false) {
 						screen_error = true;
 						screen_error_message = "データを読み込めませんでした！！";
@@ -1212,6 +1248,14 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						clear_show_window();
 						is_show_bag = false;
 					}
+				}
+				break;
+			case KeyEvent.VK_S:
+				if(!mSaveDataManager.writeSaveData()) {
+					System.out.println("save data fail");
+					message_add("セーブ失敗！！");
+				} else {
+					message_add("セーブしたよ！！");
 				}
 				break;
 			}
@@ -1337,72 +1381,6 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		} catch (Exception e) {
 			System.out.println("fail with run method");
 		}
-	}
-
-	boolean read_savedata() {
-		try {
-			save_data = new BufferedReader(new FileReader("../savedata/escape_game/savedata.txt"));
-			String data = save_data.readLine();
-			while (data != null) {
-				if (data.substring(0, 2).equals("//")) { //コメント行
-				} else if (data.substring(0, 3).equals("END")) { //セーブファイル終端行
-					setConfig();
-				} else {
-					String[] dataArray = data.split(":"); //データラベル:データ
-					String dataLabel = dataArray[0]; //データラベル
-					String dataContent = dataArray[1]; //データ
-					String[] dataLabels = dataLabel.split("\\("); //データラベルを"("で分解[※データラベル(部屋名)となっているものがあるため]※(等をsplitする際はescape記号必須
-					String dataLabel_woLP = null; //woLP = without left Paren
-					if (dataLabels != null)
-						dataLabel_woLP = dataLabels[0];
-					if (dataLabel.equals("playerX")) {
-						player_x = Integer.parseInt(dataContent);
-					} else if (dataLabel.equals("playerY")) {
-						player_y = Integer.parseInt(dataContent);
-					} else if (dataLabel.equals("field")) {
-						Field field = getField(dataContent);
-						if (field == null) { //field取得失敗
-							System.out.println("fieldの取得に失敗しました。");
-							return false;
-						}
-						now_field = field;
-						screenMode = dataContent;
-						now_field.setImages(getCodeBase());
-					} else if (dataLabel.equals("item")) {
-						String[] items = dataContent.split(",");
-						for (int index = 0; index < items.length; index++) {
-							bag.add(items[index]);
-						}
-					} else if (dataLabel_woLP.equals("flag")) {
-						String[] fieldNames = dataLabels[1].split("\\)"); //field名)を")"で分解
-						String fieldName = fieldNames[0]; //room名
-						if (fieldName.equals("Common")) { //共通のフラグ
-							String[] flags = dataContent.split(",");
-							for (int index = 0; index < flags.length; index++) {
-								if (flags[index].equals("nothing"))
-									break;
-								this.setFlagTrue(flags[index]);
-							}
-						} else { //各フィールド(部屋)毎のフラグ
-							Field field = getField(fieldName);
-							String[] flags = dataContent.split(",");
-							for (int index = 0; index < flags.length; index++) {
-								if (flags[index].equals("nothing"))
-									break;
-								field.setFlagTrue(flags[index]);
-							}
-						}
-					} else { //設定されていないラベルがファイルに書かれている場合
-						System.out.println("設定されていないラベル名がファイルに記述されています");
-						return false;
-					}
-				}
-				data = save_data.readLine();
-			}
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
 	}
 
 	/**
