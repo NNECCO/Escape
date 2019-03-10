@@ -3,6 +3,7 @@ package escape_game;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.net.URL;
+import java.util.ArrayList;
 
 //和室1(下側の方の和室)
 public class JapaneseStyleRoom2 extends Field {
@@ -327,5 +328,32 @@ public class JapaneseStyleRoom2 extends Field {
 
 	void updateJSR1DoorFlag(boolean isJSR1DoorOpened) {
 		this.isJSR1DoorOpened = isJSR1DoorOpened;
+	}
+
+	@Override
+	ArrayList<String> getTrueFlags() {
+		ArrayList<String> trueFlags = new ArrayList<String>();
+		if (isDKDoorOpened) {
+			trueFlags.add("isDKDoorOpened");
+		}
+		if (isJSR1DoorOpened) {
+			trueFlags.add("isJSR1DoorOpened");
+		}
+		if (isCheckedDKDoor) {
+			trueFlags.add("isCheckedDKDoor");
+		}
+		if (isCheckedJSR1Door) {
+			trueFlags.add("isCheckedJSR1Door");
+		}
+		if (isGetTutu) {
+			trueFlags.add("isGetTutu");
+		}
+		if (isCheckedLogoHint) {
+			trueFlags.add("isCheckedLogoHint");
+		}
+		if (isLogoHintLooking) {
+			trueFlags.add("isLogoHintLooking");
+		}
+		return trueFlags;
 	}
 }

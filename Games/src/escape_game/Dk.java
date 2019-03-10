@@ -207,6 +207,8 @@ public class Dk extends Field {
 		else if (flagString.equals("key_jsr1")) key_jsr1 = true;
 		else if (flagString.equals("door_wasitu1")) setDoor_wasitu1(true);
 		else if (flagString.equals("door_wasitu2")) setDoor_wasitu2(true);
+		else if (flagString.equals("hint")) hint = true;
+		else if (flagString.equals("jsrFlug")) jsrFlug = true;
 		else System.out.println("次のフラグ名に対応するフラグはありませんでした:"+flagString);
 	}
 
@@ -232,6 +234,39 @@ public class Dk extends Field {
 
 	public void setKey_jsr1(boolean key_jsr1) {
 		this.key_jsr1 = key_jsr1;
+	}
+
+	@Override
+	ArrayList<String> getTrueFlags() {
+		ArrayList<String> trueFlags = new ArrayList<String>();
+		if (tunacan) {
+			trueFlags.add("tunacan");
+		}
+		if (tap) {
+			trueFlags.add("tap");
+		}
+		if (key_yukasita) {
+			trueFlags.add("key_yukasita");
+		}
+		if (key_wc_10yen) {
+			trueFlags.add("key_wc_10yen");
+		}
+		if (hint) {
+			trueFlags.add("hint");
+		}
+		if (key_jsr1) {
+			trueFlags.add("key_jsr1");
+		}
+		if (door_wasitu1) {
+			trueFlags.add("door_wasitu1");
+		}
+		if (door_wasitu2) {
+			trueFlags.add("door_wasitu2");
+		}
+		if (jsrFlug) {
+			trueFlags.add("jsrFlug");
+		}
+		return trueFlags;
 	}
 }
 
@@ -361,7 +396,25 @@ class DkTop extends Field{
 
 	@Override
 	void setFlagTrue(String flagString) {
-		System.out.println("次のフラグ名に対応するフラグはありませんでした:"+flagString);
+		if (flagString.equals("isWCDoorOpen")) {
+			isWCDoorOpen = true;
+		} else if (flagString.equals("isDatuijoDoorOpen")) {
+			isDatuijoDoorOpen = true;
+		} else {
+			System.out.println("次のフラグ名に対応するフラグはありませんでした:"+flagString);
+		}
 	}
-	
+
+	@Override
+	ArrayList<String> getTrueFlags() {
+		ArrayList<String> trueFlags = new ArrayList<String>();
+		if (isWCDoorOpen) {
+			trueFlags.add("isWCDoorOpen");
+		}
+		if (isDatuijoDoorOpen) {
+			trueFlags.add("isDatuijoDoorOpen");
+		}
+		return trueFlags;
+	}
+
 }

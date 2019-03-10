@@ -3,6 +3,7 @@ package escape_game;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.net.URL;
+import java.util.ArrayList;
 
 //和室1(下側の方の和室)
 public class JapaneseStyleRoom1 extends Field {
@@ -221,6 +222,8 @@ public class JapaneseStyleRoom1 extends Field {
 			isCheckedLowerCloset = true;
 		} else if (flagString.equals("isCheckedKakejiku")) {
 			isCheckedKakejiku = true;
+		} else if (flagString.equals("isAlreadyMoveToJSR2")) {
+			isAlreadyMoveToJSR2 = true;
 		} else {
 			System.out.println("次のフラグ名に対応するフラグはありませんでした:" + flagString);
 		}
@@ -239,4 +242,33 @@ public class JapaneseStyleRoom1 extends Field {
 		return isJSRoom2DoorOpened;
 	}
 
+	@Override
+	ArrayList<String> getTrueFlags() {
+		ArrayList<String> trueFlags = new ArrayList<String>();
+		if (isHClosetDoorOpened) {
+			trueFlags.add("isHClosetDoorOpened");
+		}
+		if (isLClosetDoorOpened) {
+			trueFlags.add("isLClosetDoorOpened");
+		}
+		if (isJSRoom2DoorOpened) {
+			trueFlags.add("isJSRoom2DoorOpened");
+		}
+		if (isCheckedWindow) {
+			trueFlags.add("isCheckedWindow");
+		}
+		if (isCheckedHigherCloset) {
+			trueFlags.add("isCheckedHigherCloset");
+		}
+		if (isCheckedLowerCloset) {
+			trueFlags.add("isCheckedLowerCloset");
+		}
+		if (isCheckedKakejiku) {
+			trueFlags.add("isCheckedKakejiku");
+		}
+		if (isAlreadyMoveToJSR2) {
+			trueFlags.add("isAlreadyMoveToJSR2");
+		}
+		return trueFlags;
+	}
 }
