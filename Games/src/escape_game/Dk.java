@@ -207,8 +207,6 @@ public class Dk extends Field {
 		else if (flagString.equals("key_jsr1")) key_jsr1 = true;
 		else if (flagString.equals("door_wasitu1")) setDoor_wasitu1(true);
 		else if (flagString.equals("door_wasitu2")) setDoor_wasitu2(true);
-		else if (flagString.equals("hint")) hint = true;
-		else if (flagString.equals("jsrFlug")) jsrFlug = true;
 		else System.out.println("次のフラグ名に対応するフラグはありませんでした:"+flagString);
 	}
 
