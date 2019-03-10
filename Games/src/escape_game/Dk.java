@@ -102,7 +102,7 @@ public class Dk extends Field {
 				tunacan = true;
 				mainpro.bag.add("ツナ缶");
 			} else if(examine_point.equals("reizouko") && tunacan && !jsrFlug) {
-				mainpro.message_add("もう何もない");
+				mainpro.message_add("ツナ缶はもうこれ以上いらない");
 				jsrFlug = true;
 			} else if(examine_point.equals("reizouko") && tunacan && jsrFlug && !mainpro.westernStyleRoom.isGetMagnet()) {
 				mainpro.message_add("ん!?隙間の奥に鍵がある");

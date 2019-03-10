@@ -1,8 +1,8 @@
 //20170820(playerX,playerY以外はtrueのものをカンマ区切りで記述。)
 playerX:250
 playerY:250
-field:JapaneseStyleRoom1
-item:洋室-DKの鍵
+field:Datuijo
+item:洋室-DKの鍵,ツナ缶,何かのヒント
 flag(Common):is_already_checked_bag
 flag(WesternStyleRoom):is_get_west_dk_key,is_open_door,is_checked_door
 flag(Dk):door_wasitu1

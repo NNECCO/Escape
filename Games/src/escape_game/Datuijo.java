@@ -3,6 +3,7 @@ package escape_game;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.net.URL;
+import java.util.Random;
 
 public class Datuijo extends Field{
 
@@ -20,6 +21,8 @@ public class Datuijo extends Field{
 	boolean brokenMirror;
 	boolean latm; //鏡を見ている
 	boolean setTap;
+	
+	private Random rnd = new Random(); //お遊び用
 	
 	Mainpro mainpro;
 	
@@ -62,7 +65,7 @@ public class Datuijo extends Field{
 	String here(int cx, int cy) {
 		if(190 <= cx && cx <= 210 && cy < 130) {
 			return "tap";
-		} else if(160 <= cx && cx <= 250 && cy < 130) {
+		} else if(150 <= cx && cx <= 250 && cy < 130) {
 			return "mirror";
 		} else if(120 <= cx && cx <= 250 && cy < 130) {
 			return "senmenjo";
@@ -70,7 +73,7 @@ public class Datuijo extends Field{
 			return "sentakuki";
 		} else if(350 <= cx && 230 <= cy) {
 			return "Datuijo->DkTop";
-		} else if(cx < 120 && 210 <= cy && cy <= 250) {
+		} else if(cx < 120 && 200 <= cy && cy <= 250) {
 			return "Datuijo->Bathroom";
 		} else if(120 <= cx && cx < 350 && 50 <= cy && cy <= 300) {
 			return "inside";
@@ -80,13 +83,7 @@ public class Datuijo extends Field{
 	
 	@Override
 	void examine_result(String examine_point) {
-		if(examine_point.equals("tap")) {
-			if(!this.setTap) {
-				mainpro.message_add("蛇口がない・・・");
-			} else {
-				mainpro.message_add("(蛇口を取りつけた洗面所だ)");
-			}
-		} else if(examine_point.equals("mirror")) {
+		if(examine_point.equals("mirror")) {
 			if(!brokenMirror) {
 				latm = true;
 			}
@@ -107,13 +104,35 @@ public class Datuijo extends Field{
 				break;
 			case "tap":
 				if(!this.setTap) {
-					mainpro.message_add("台所の蛇口が取りつけられる！");
-					mainpro.message_add("(蛇口を取り付けた!)");
-					this.setTap = true;
+					if(mainpro.bag.contains("蛇口")) {
+						mainpro.message_add("台所の蛇口が取りつけられる！");
+						mainpro.message_add("(蛇口を取り付けた!)");
+						this.setTap = true;	
+					} else {
+						mainpro.message_add("この洗面所、蛇口がない・・・");
+						mainpro.message_add("(水分が欲しい（'□'）)");
+						if(rnd.nextDouble() <= 0.4 && mainpro.bag.contains("ツナ缶")) {
+							mainpro.message_add("冷蔵庫にはまだツナ缶あったよな");
+							mainpro.message_add("（　＾ω＾）・・・");
+							mainpro.message_add("ツナ缶で水分を補充じゃあああ!!!");
+							mainpro.message_add("(ツナ缶を消費しました)");
+							mainpro.bag.remove("ツナ缶");
+						}
+					}
 				} else {
-					mainpro.message_add("(蛇口はもう付いている)");
+					mainpro.message_add("(ジャーーーッ)");
+					if(item.equals("何かのヒント")) {
+						mainpro.message_add("この紙、試しに濡らしてみるか");
+						mainpro.message_add("・・・文字が浮かび上がってまいりましたーー!!");
+						mainpro.message_add("(ヒント1を手に入れた!)");
+						
+					} else {
+						mainpro.message_add("水はいつでも飲めるな（^o^）");	
+					}
 				}
 				break;
+			case "ヒント1":
+				
 		}
 			
 	}
@@ -132,9 +151,8 @@ public class Datuijo extends Field{
 
 	@Override
 	String hint() {
-		if(!brokenMirror) {
-			return "鏡に何か映ってる";
-		}
+		if(!brokenMirror) return "鏡に何か映ってる";
+		if(!setTap && mainpro.bag.contains("蛇口")) return "蛇口を使うとしたら水場ぐらいか・・・"; 
 		return "ここにはもう何もなさそうだ";
 	}
 

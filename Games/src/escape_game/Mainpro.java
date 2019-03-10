@@ -44,7 +44,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	int screen_size_y = 500;
 	//画面のインスタンス
 	NO_FIELD nothing_field = new NO_FIELD();
-	Title title = new Title();;
+	Title title = new Title();
 	Tutorial tuto = new Tutorial();
 	WesternStyleRoom westernStyleRoom;
 	Dk dk;
@@ -889,8 +889,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 									now_field = bathroom;
 									screenMode = "Bathroom";
 									now_field.setImages(getCodeBase());
-									player_x = 330;
-									player_y = 260;
+									player_x = 390;
+									player_y = 200;
 								} else if (now_field == dk && player_x < 30 && 40 <= player_y && player_y <= 110) {
 									/* DK -> JapaneseStyleRoom2 */
 									now_field = japaneseStyleRoom2;
@@ -1045,7 +1045,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 								 * 部屋移動の処理
 								 */
 								if (350 <= player_x && 230 <= player_y && player_y <= 280 && now_field == datuijo) {
-									/* datuijo -> DkTop */
+									/* Datuijo -> DkTop */
 									now_field = dkTop;
 									screenMode = "DkTop";
 									now_field.setImages(getCodeBase());
@@ -1062,6 +1062,13 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 									now_field.setImages(getCodeBase());
 									player_x = 40;
 									player_y = 70;
+								} else if(410 < player_x && 160 <= player_y && player_y <= 230 && now_field == bathroom) {
+									/* Bathroom -> Datuijo*/
+									now_field = datuijo;
+									screenMode = "Datuijo";
+									now_field.setImages(getCodeBase());
+									player_x = 130;
+									player_y = 220;
 								}
 							}
 						} else {

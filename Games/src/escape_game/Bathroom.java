@@ -6,17 +6,28 @@ import java.net.URL;
 
 public class Bathroom extends Field{
 
-	Image bathroom1;
-	Image bathroom2;
-	Image bathroom3;
-	Image timer;
 	
-	boolean latt; //timerを見ている
-	
-	Mainpro mainpro;
+	private Image bathroom;
+	private Image timer;
+	private Image timer_zoom;
+	private Image timer_zoom2;
+	private boolean latt; //timerを見ている
+	private boolean flug_timer_zoom = false;
+	private Mainpro mainpro;
 	
 	public Bathroom(Mainpro mainpro) {
 		this.mainpro = mainpro;
+	}
+	
+	public void paint(Mainpro mainpro) {
+		if(latt) {
+			if(!flug_timer_zoom) mainpro.buffer.drawImage(timer_zoom, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mainpro);
+			else mainpro.buffer.drawImage(timer_zoom2, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mainpro);
+			if(mainpro.message.get(0).equals("nothing")) {
+				latt = false;
+				flug_timer_zoom = true;
+			}
+		}
 	}
 	
 	@Override
@@ -32,20 +43,53 @@ public class Bathroom extends Field{
 
 	@Override
 	String here(int cx, int cy) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		if(60 <= cx && cx <= 150 && 100 <= cy && cy <= 250) {
+			return "inside";
+		} else if(150 <= cx && cx <= 170 && 100 <= cy && cy <= 230) {
+			return "out-bathtub";
+		} else if(cx < 240 && 120 <= cy && cy <= 250) {
+			return "bathtub";
+		} else if(cx < 240 && 250 < cy ) {
+			return "bathtubside";
+		} else if(410 < cx && 160 <= cy && cy <= 230) {
+			return "Bathroom->Datuijo";
+		} else if(cx == 60 && cy <= 115) {
+			return "timer";
+		} else if(cy < 120 || 290 < cy || 410 < cx) {
+			return "wall";
+		}
+		return "inside";
 	}
 
 	@Override
 	void examine_result(String ex_result) {
-		// TODO 自動生成されたメソッド・スタブ
-		
+		if(ex_result.equals("timer")) {
+			latt = true;
+		}
 	}
 
 	@Override
 	void examine_effect(String examine_point, String item) {
-		// TODO 自動生成されたメソッド・スタブ
-		
+		switch(examine_point) {
+			case "bathtub":
+				mainpro.player_x = 150;
+				mainpro.player_y = 175;
+				break;
+			case "timer":
+				if(!flug_timer_zoom) {
+					mainpro.message_add("なにこれ?");
+					mainpro.message_add("解像度ひでえww");
+					mainpro.message_add("(画像を修正しました!!?)");
+				} else {
+					mainpro.message_add("なにこれ?");
+					mainpro.message_add("真ん中に2・・・何を意味しているんだ?");
+				}
+				break;
+			case "out-bathtub":
+				mainpro.player_x = 250;
+				mainpro.player_y = 200;
+				break;
+		}
 	}
 
 	@Override
@@ -62,26 +106,26 @@ public class Bathroom extends Field{
 
 	@Override
 	String hint() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		return "風呂場と言えばやはり浴槽!!";
 	}
 
 	@Override
 	void showMap(ImageObserver field) {
-		// TODO 自動生成されたメソッド・スタブ
-		
+		mainpro.buffer.drawImage(bathroom, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, field);
+		mainpro.buffer.drawImage(timer, 70, 70, 20, 20, field);
 	}
 
 	@Override
 	void setImages(URL codeBase) {
-		// TODO 自動生成されたメソッド・スタブ
-		
+		bathroom = mainpro.getImage(codeBase, "../material_data/escape_game/bathroom/base.png");
+		timer = mainpro.getImage(codeBase, "../material_data/escape_game/bathroom/timer.png");
+		timer_zoom = mainpro.getImage(codeBase, "../material_data/escape_game/bathroom/timer_zoom.png");
+		timer_zoom2 = mainpro.getImage(codeBase, "../material_data/escape_game/bathroom/timer_zoom2.png");
 	}
 
 	@Override
 	public String toString() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		return "Bathroom";
 	}
 
 	@Override
