@@ -3,7 +3,6 @@ package escape_game;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class Datuijo extends Field{
 
@@ -173,24 +172,4 @@ public class Datuijo extends Field{
 		
 	}
 
-	@Override
-	ArrayList<String> getTrueFlags() {
-		ArrayList<String> trueFlags = new ArrayList<String>();
-		if (openDoor1) {
-			trueFlags.add("openDoor1");
-		}
-		if (openDoor2) {
-			trueFlags.add("openDoor2");
-		}
-		if (brokenMirror) {
-			trueFlags.add("brokenMirror");
-		}
-		if (latm) {
-			trueFlags.add("latm");
-		}
-		if (setTap) {
-			trueFlags.add("setTap");
-		}
-		return trueFlags;
-	}
 }

@@ -2,7 +2,6 @@ package escape_game;
 
 import java.awt.image.ImageObserver;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class NO_FIELD extends Field {
 	
@@ -63,9 +62,4 @@ public class NO_FIELD extends Field {
 		
 	}
 
-	@Override
-	ArrayList<String> getTrueFlags() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
-	}
 }

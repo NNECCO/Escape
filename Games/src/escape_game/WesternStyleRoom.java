@@ -275,28 +275,4 @@ public class WesternStyleRoom extends Field {
 	public boolean isGetMagnet() {
 		return this.is_get_magnet;
 	}
-
-	@Override
-	ArrayList<String> getTrueFlags() {
-		ArrayList<String> trueFlags = new ArrayList<String>();
-		if (is_get_west_dk_key) {
-			trueFlags.add("is_get_west_dk_key");
-		}
-		if (is_get_cutter) {
-			trueFlags.add("is_get_cutter");
-		}
-		if (is_get_light) {
-			trueFlags.add("is_get_light");
-		}
-		if (is_get_magnet) {
-			trueFlags.add("is_get_magnet");
-		}
-		if (is_open_door) {
-			trueFlags.add("is_open_door");
-		}
-		if (is_checked_door) {
-			trueFlags.add("is_checked_door");
-		}
-		return trueFlags;
-	}
 }
