@@ -731,6 +731,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			} else if (e.getSource() == saveDataButton) {
 				if(!mSaveDataManager.writeSaveData()) {
 					System.out.println("save data fail");
+					message_add("セーブ失敗！！");
+				} else {
+					message_add("セーブしたよ！！");
 				}
 			}
 		}

@@ -222,6 +222,8 @@ public class JapaneseStyleRoom1 extends Field {
 			isCheckedLowerCloset = true;
 		} else if (flagString.equals("isCheckedKakejiku")) {
 			isCheckedKakejiku = true;
+		} else if (flagString.equals("isAlreadyMoveToJSR2")) {
+			isAlreadyMoveToJSR2 = true;
 		} else {
 			System.out.println("次のフラグ名に対応するフラグはありませんでした:" + flagString);
 		}
