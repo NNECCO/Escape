@@ -6,17 +6,19 @@ import java.net.URL;
 
 public class Bathroom extends Field{
 
-	
 	private Image bathroom;
 	private Image timer;
 	private Image timer_zoom;
 	private Image timer_zoom2;
+	private Image yuge;
 	private boolean latt; //timerを見ている
 	private boolean flug_timer_zoom = false;
 	private Mainpro mainpro;
+	private Datuijo datuijo;
 	
-	public Bathroom(Mainpro mainpro) {
+	public Bathroom(Mainpro mainpro, Datuijo datuijo) {
 		this.mainpro = mainpro;
+		this.datuijo = datuijo;
 	}
 	
 	public void paint(Mainpro mainpro) {
@@ -106,13 +108,16 @@ public class Bathroom extends Field{
 
 	@Override
 	String hint() {
-		return "風呂場と言えばやはり浴槽!!";
+		if(datuijo.getFan()) return "風呂場と言えばやはり浴槽!!";
+		else return "湯気で何も見えない・・・";
 	}
 
 	@Override
 	void showMap(ImageObserver field) {
 		mainpro.buffer.drawImage(bathroom, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, field);
 		mainpro.buffer.drawImage(timer, 70, 70, 20, 20, field);
+		//脱衣所で換気扇のスイッチをONにしていなければ湯気を表示
+		if(!datuijo.getFan()) mainpro.buffer.drawImage(yuge, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, field);
 	}
 
 	@Override
@@ -121,6 +126,7 @@ public class Bathroom extends Field{
 		timer = mainpro.getImage(codeBase, "../material_data/escape_game/bathroom/timer.png");
 		timer_zoom = mainpro.getImage(codeBase, "../material_data/escape_game/bathroom/timer_zoom.png");
 		timer_zoom2 = mainpro.getImage(codeBase, "../material_data/escape_game/bathroom/timer_zoom2.png");
+		yuge = mainpro.getImage(codeBase, "../material_data/escape_game/bathroom/yuge.png");
 	}
 
 	@Override

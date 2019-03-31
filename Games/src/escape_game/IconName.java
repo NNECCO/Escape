@@ -11,10 +11,15 @@ public class IconName {
 	public static final String JUENDAMA = "十円玉";
 	public static final String TAP = "懐中電灯";
 	public static final String TUNAKAN = "ツナ缶";
+	public static final String HINT = "何かのヒント";
 	//japanese-style-room2
 	public static final String TUTU = "筒";
 	public static final String YUKASITA_KEY ="床下収納の鍵";
 	//wc
 	public static final String DK_DATUIJO_KEY = "DK-脱衣所の鍵";
 	public static final String TRIANGLE_HINT = "トイレにあった紙";
+	//datuijo
+	//public static final String TRIANGLE_KEY = "三角形の模様が描かれている紙";
+	public static final String HINT_OF_HINT = "謎の紙";
+	
 }

@@ -127,8 +127,12 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	//wc
 	Image icon_datuijo_key = null;
 	Image icon_triangle_hint = null;
+	//datuijo
+	//Image icon_triangle_key = null;
+	Image icon_hint_of_hint = null;
 	//その他
 	Image title_gazo = null;//title用画像
+	Image hint_of_hint = null;
 	BufferedReader save_data = null;
 	//ここまで画像
 	ArrayList<String> message = new ArrayList<String>();//messageメッセージの保存
@@ -141,7 +145,10 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	String screen_error_message = "";
 	//バッグを既に確認しているか
 	boolean is_already_checked_bag = false;
-
+	
+	//画像を大きく表示する際のフラグ
+	public boolean zoom_hint_of_hint = false;
+	
 	//ex) examine_range= 50 -> 現地点 ~ 現地点から50ポイント離れた地点
 
 	public void init() {
@@ -158,7 +165,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		japaneseStyleRoom1 = new JapaneseStyleRoom1(this);
 		japaneseStyleRoom2 = new JapaneseStyleRoom2(this);
 		datuijo = new Datuijo(this);
-		bathroom = new Bathroom(this);
+		bathroom = new Bathroom(this, datuijo);
 		wc = new WC(this);
 		now_field = westernStyleRoom;
 		now_field.setImages(getCodeBase());
@@ -187,8 +194,12 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			//wc
 			icon_datuijo_key = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_datuijo_key.png");
 			icon_triangle_hint = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_triangle_hint.png");
+			//datuijo
+			//icon_triangle_key = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_triangle_key.png");
+			icon_hint_of_hint = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_hint_of_hint.png");
 			//その他
 			title_gazo = getImage(getCodeBase(),"../material_data/escape_game/other/title_gazo.png");
+			hint_of_hint = getImage(getCodeBase(), "../material_data/escape_game/datuijo/hint_of_hint_zoom.png");
 		}
 		//ここまで画像
 		//調べる範囲を移動距離(vx)と同じにする。
@@ -212,6 +223,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		//wc
 		name_to_icon.put(IconName.DK_DATUIJO_KEY, icon_datuijo_key);
 		name_to_icon.put(IconName.TRIANGLE_HINT, icon_triangle_hint);
+		//datuijo
+		//name_to_icon.put(IconName.TRIANGLE_KEY, icon_triangle_key);
+		name_to_icon.put(IconName.HINT_OF_HINT, icon_hint_of_hint);
 		//ここまで要素の追加
 		back = createImage(screen_size_x+2000,screen_size_y+1000);
 		buffer = back.getGraphics();
@@ -348,9 +362,15 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		is_next = false;
 		if (screen_error == true)
 			show_screen_error();
+		
+		//bagで謎の紙を使用したときに大きく表示する
+		if(zoom_hint_of_hint) {
+			buffer.drawImage(hint_of_hint, 0, 0, screen_size_x, screen_size_y-100, this);
+		}
+		
 		g.drawImage(back, 0, 0, this);
 	}
-
+	
 	void show_current_time() {
 		buffer.setColor(Color.white);
 		buffer.fillRect(screen_size_x - 99, screen_size_y - 99, 99, 99);
@@ -655,7 +675,13 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						if (isItemStatusChanged(bag_index)) {
 							break;
 						}
-						examine(bag.get(bag_index));
+						String item = bag.get(bag_index);
+						//謎の紙を使用した場合
+						if(IconName.HINT_OF_HINT.equals(item)) {
+							zoom_hint_of_hint = true;
+						} else {
+							examine(item);
+						}
 						clear_show_window();
 						is_show_bag = false;
 						break;
@@ -722,6 +748,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		zoom_hint_of_hint = false;
 		if (running == false) {
 			running = true;
 			th = new Thread(this);
