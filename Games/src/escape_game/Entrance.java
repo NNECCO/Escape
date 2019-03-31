@@ -10,13 +10,18 @@ public class Entrance extends Field{
 	Image gennkann;//扉あり
 	Image gennkann2;//扉なし
 	Image moyou;
-	
+	Image moyouForDialog; // 謎の回答入力ダイアログ用
+
 	private boolean isCheckDoor; //最序盤、玄関の扉の調査フラグ
 	private boolean opened; //玄関が開いているかどうか
 	private boolean latd; //玄関の模様を見ている最中かどうか
-	
-	Mainpro mainpro;	
-	
+
+	private InputDialog mDialog;
+	private String[] mAnswers = {"6", "3", "2", "3", "7"};
+
+
+	Mainpro mainpro;
+
 	Entrance(Mainpro mainpro) {
 		this.mainpro = mainpro;
 		this.isCheckDoor = false;
@@ -24,9 +29,9 @@ public class Entrance extends Field{
 		this.latd = false;
 		//texts = new ArrayList<String>();
 		/* 序盤 */
-		
+
 	}
-	
+
 	public void paint(Mainpro mainpro) {
 		//玄関の模様を調べているとき
 		if(latd) {
@@ -34,10 +39,23 @@ public class Entrance extends Field{
 			if(mainpro.message.get(0).equals("nothing")) {
 				latd = false;
 			}
+			// 脱出用ダイアログ
+			if (mDialog == null) {
+				mDialog = new InputDialog(mainpro, mainpro.buffer, 250, 200, 200, 200, null, moyouForDialog, mAnswers);
+				mDialog.setTitleImg(moyouForDialog);
+				mDialog.setAnswers(mAnswers);
+			} else {
+				if (latd) {
+					mDialog.show(mainpro.buffer);
+				} else {
+					mDialog.clearDialog();
+					mDialog = null;
+				}
+			}
 		}
 		super.paint(mainpro);
 	}
-	
+
 	/**
 	 * あたり判定の結果を返す
 	 */
@@ -48,10 +66,10 @@ public class Entrance extends Field{
 		} else if(here.equals("door") && opened) {
 			return true;
 		} else {
-			return false;			
+			return false;
 		}
 	}
-	
+
 	/**
 	 * あたり判定
 	 */
@@ -60,7 +78,7 @@ public class Entrance extends Field{
 			return "door";
 		} else if(150 <= cx && cx <= 310 && 300 <= cy) {
 			return "Entrance->DkTop";
-		} else if(cx < 130 && cy < 270) { 
+		} else if(cx < 130 && cy < 270) {
 			return "getabako";
 		} else if(10 <= cx && cx <= 410 && 80 <= cy && cy + mainpro.character_size_y <= 360) {
 			return "inside";
@@ -115,16 +133,17 @@ public class Entrance extends Field{
 		if(!opened) {
 			mainpro.buffer.drawImage(gennkann, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);
 		} else {
-			mainpro.buffer.drawImage(gennkann2, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);			
+			mainpro.buffer.drawImage(gennkann2, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);
 		}
 
 	}
 
 	@Override
 	void setImages(URL codeBase) {
-		gennkann = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/gennkann.png");		
+		gennkann = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/gennkann.png");
 		gennkann2 = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/gennkann2.png");
 		moyou = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/moyou.png");
+		moyouForDialog = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/moyou_for_dialog.png");
 	}
 
 	@Override
