@@ -3,6 +3,7 @@ package escape_game;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class Entrance extends Field{
 
@@ -153,4 +154,18 @@ public class Entrance extends Field{
 		else System.out.println("次のフラグ名に対応するフラグはありませんでした:"+flagString);
 	}
 
+	@Override
+	ArrayList<String> getTrueFlags() {
+		ArrayList<String> trueFlags = new ArrayList<String>();
+		if (isCheckDoor) {
+			trueFlags.add("isCheckDoor");
+		}
+		if (opened) {
+			trueFlags.add("opened");
+		}
+		if (latd) {
+			trueFlags.add("latd");
+		}
+		return trueFlags;
+	}
 }

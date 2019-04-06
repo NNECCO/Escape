@@ -3,6 +3,7 @@ package escape_game;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class Bathroom extends Field{
 
@@ -140,4 +141,12 @@ public class Bathroom extends Field{
 		
 	}
 
+	@Override
+	ArrayList<String> getTrueFlags() {
+		ArrayList<String> trueFlags = new ArrayList<String>();
+		if (latt) {
+			trueFlags.add("latt");
+		}
+		return trueFlags;
+	}
 }
