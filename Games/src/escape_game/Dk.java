@@ -104,15 +104,15 @@ public class Dk extends Field {
 			} else if(examine_point.equals("reizouko") && tunacan && !jsrFlug) {
 				mainpro.message_add("ツナ缶はもうこれ以上いらない");
 				jsrFlug = true;
-			} else if(examine_point.equals("reizouko") && tunacan && jsrFlug && !mainpro.westernStyleRoom.isGetMagnet()) {
-				mainpro.message_add("ん!?隙間の奥に鍵がある");
-				mainpro.message_add("・・・・・手が届かない( ・ ω ・ )");
-			} else if(examine_point.equals("reizouko") && tunacan && jsrFlug && mainpro.westernStyleRoom.isGetMagnet() && !this.key_jsr1) {
+			}else if(examine_point.equals("reizouko") && tunacan && jsrFlug && !key_jsr1 && "可変式棒磁石".equals(item)) {
 				mainpro.message_add("磁石でくっ付ければ・・・っしゃ!取れた!!!");
 				mainpro.message_add("(和室1への鍵を手に入れた!)");
 				setKey_jsr1(true);
 				mainpro.bag.add("DK-和室1の鍵");
-			} else if(examine_point.equals("reizouko") && tunacan && jsrFlug && mainpro.westernStyleRoom.isGetMagnet() && this.key_jsr1) {
+			} else if(examine_point.equals("reizouko") && tunacan && jsrFlug && !key_jsr1) {
+				mainpro.message_add("ん!?隙間の奥に鍵がある");
+				mainpro.message_add("・・・・・手が届かない( ・ ω ・ )");
+			} else if(examine_point.equals("reizouko") && tunacan && jsrFlug && mainpro.westernStyleRoom.isGetMagnet() && key_jsr1) {
 				mainpro.message_add("ここにはもう何もない");
 			} else if(examine_point.equals("sink") && !tap) {
 				mainpro.message_add("水は出るのか？");
@@ -175,7 +175,7 @@ public class Dk extends Field {
 	@Override
 	void showMap(ImageObserver mapr) {
 		mainpro.buffer.drawImage(img_dk_floor, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);
-		mainpro.buffer.drawImage(img_dk_tap, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mainpro);
+		if(!tap) mainpro.buffer.drawImage(img_dk_tap, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mainpro);
 		mainpro.buffer.drawImage(img_dk_fusuma, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mainpro);
 		mainpro.buffer.drawImage(img_dk_table, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mainpro);
 		mainpro.buffer.drawImage(img_dk_door_wasitu1, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mainpro);
