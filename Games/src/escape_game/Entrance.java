@@ -5,18 +5,29 @@ import java.awt.image.ImageObserver;
 import java.net.URL;
 import java.util.ArrayList;
 
+import escape_game.InputDialog.ResultListener;
+
 public class Entrance extends Field{
 
 	Image gennkann;//扉あり
 	Image gennkann2;//扉なし
 	Image moyou;
-	
+	Image moyouForDialog; // 謎の回答入力ダイアログ用
+
 	private boolean isCheckDoor; //最序盤、玄関の扉の調査フラグ
 	private boolean opened; //玄関が開いているかどうか
 	private boolean latd; //玄関の模様を見ている最中かどうか
-	
-	Mainpro mainpro;	
-	
+	private boolean isDoorCheckedFirst; //ダイアログメッセージを初回は無効にする用のフラグ
+
+	private InputDialog dialog;
+
+	// private String[] answers = {"6", "3", "2", "3", "7"};
+	// 下はデバッグ用
+	private String[] answers = {"0", "0", "0", "0", "0"};
+
+
+	Mainpro mainpro;
+
 	Entrance(Mainpro mainpro) {
 		this.mainpro = mainpro;
 		this.isCheckDoor = false;
@@ -24,9 +35,9 @@ public class Entrance extends Field{
 		this.latd = false;
 		//texts = new ArrayList<String>();
 		/* 序盤 */
-		
+
 	}
-	
+
 	public void paint(Mainpro mainpro) {
 		//玄関の模様を調べているとき
 		if(latd) {
@@ -34,10 +45,61 @@ public class Entrance extends Field{
 			if(mainpro.message.get(0).equals("nothing")) {
 				latd = false;
 			}
+			// 脱出用ダイアログ
+			if (dialog == null) {
+				// mainpro.message_add("何か入力してみるか...");
+				dialog = new InputDialog(mainpro, mainpro.buffer, mainpro, mainpro , 250, 200, 200, 200, null, moyouForDialog, answers);
+				dialog.updateScreenSize(mainpro.screen_size_x, mainpro.screen_size_y);
+				dialog.setTitleImg(moyouForDialog);
+				dialog.setAnswers(answers);
+				dialog.resetSelectionIndex(5);
+				dialog.setResultListener(new ResultListener() {
+
+					@Override
+					public void ok() {
+						if (dialog == null) {
+							System.out.println("error: not found dialog");
+						}
+
+						String[] selections = dialog.getSelections();
+						int[] selectionIndex = dialog.getSelectionIndex();
+						String[] answers = dialog.getAnswers();
+
+						for (int index = 0; index < answers.length; index++) {
+							String tgtSelection = selections[selectionIndex[index]];
+							System.out.println("selections[" + index +"]: " + tgtSelection + ", answers[" + index + "]: " + answers[index]);
+
+							if (!tgtSelection.equals(answers[index])) {
+								System.out.println("password-mismatch...");
+								return;
+							}
+						}
+						opened = true;
+						// mainpro.message_add("(ピー...ガチャッ)");
+						// mainpro.message_add("やった、ドアが開いたぞ！！");
+						System.out.println("password-match!!!");
+					}
+
+					@Override
+					public void cancel() {
+						// mainpro.message_add("何も起こらない、パスワードが違うのだろうか。。。");
+						System.out.println("cancel");
+					}
+				});
+			}
+			dialog.show(mainpro.buffer);
+		}
+		else if (dialog != null) {
+			if (dialog.getIsInputDialogShown()) {
+				dialog.show(mainpro.buffer);
+			} else {
+				dialog.clearDialog();
+				dialog = null;
+			}
 		}
 		super.paint(mainpro);
 	}
-	
+
 	/**
 	 * あたり判定の結果を返す
 	 */
@@ -48,10 +110,10 @@ public class Entrance extends Field{
 		} else if(here.equals("door") && opened) {
 			return true;
 		} else {
-			return false;			
+			return false;
 		}
 	}
-	
+
 	/**
 	 * あたり判定
 	 */
@@ -60,7 +122,7 @@ public class Entrance extends Field{
 			return "door";
 		} else if(150 <= cx && cx <= 310 && 300 <= cy) {
 			return "Entrance->DkTop";
-		} else if(cx < 130 && cy < 270) { 
+		} else if(cx < 130 && cy < 270) {
 			return "getabako";
 		} else if(10 <= cx && cx <= 410 && 80 <= cy && cy + mainpro.character_size_y <= 360) {
 			return "inside";
@@ -83,7 +145,7 @@ public class Entrance extends Field{
 			if(!opened && !isCheckDoor) {
 				examine_result(examine_point);
 				mainpro.message_add("・・・・・開かない");
-				mainpro.message_add("この扉の模様・・・何かしないと開かないってわけか");
+				mainpro.message_add("この扉の模様・・・何か入力しないと開かないってわけか");
 				mainpro.message_add("この家を調べよう");
 				isCheckDoor = true;
 			} else {
@@ -115,16 +177,17 @@ public class Entrance extends Field{
 		if(!opened) {
 			mainpro.buffer.drawImage(gennkann, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);
 		} else {
-			mainpro.buffer.drawImage(gennkann2, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);			
+			mainpro.buffer.drawImage(gennkann2, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);
 		}
 
 	}
 
 	@Override
 	void setImages(URL codeBase) {
-		gennkann = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/gennkann.png");		
+		gennkann = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/gennkann.png");
 		gennkann2 = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/gennkann2.png");
 		moyou = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/moyou.png");
+		moyouForDialog = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/moyou_for_dialog.png");
 	}
 
 	@Override
@@ -167,5 +230,9 @@ public class Entrance extends Field{
 			trueFlags.add("latd");
 		}
 		return trueFlags;
+	}
+
+	public InputDialog getShownDialog() {
+		return dialog;
 	}
 }
