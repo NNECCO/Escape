@@ -137,8 +137,11 @@ public class Bathroom extends Field{
 
 	@Override
 	void setFlagTrue(String flagString) {
-		// TODO 自動生成されたメソッド・スタブ
-		
+		if (flagString.equals("latt")) {
+			latt = true;
+		} else if (flagString.equals("flug_timer_zoom")) {
+			flug_timer_zoom = true;
+		}
 	}
 
 	@Override
@@ -146,6 +149,9 @@ public class Bathroom extends Field{
 		ArrayList<String> trueFlags = new ArrayList<String>();
 		if (latt) {
 			trueFlags.add("latt");
+		}
+		if (flug_timer_zoom) {
+			trueFlags.add("flug_timer_zoom");
 		}
 		return trueFlags;
 	}
