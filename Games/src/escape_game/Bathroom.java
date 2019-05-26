@@ -13,13 +13,14 @@ public class Bathroom extends Field{
 	private Image timer_zoom2;
 	private Image yuge;
 	private boolean latt; //timerを見ている
-	private boolean flug_timer_zoom = false;
+	private boolean flug_timer_zoom; //解像度の悪い画像を見たか否かのフラグ
 	private Mainpro mainpro;
-	private Datuijo datuijo;
+	//private Datuijo datuijo;
 	
 	public Bathroom(Mainpro mainpro, Datuijo datuijo) {
 		this.mainpro = mainpro;
-		this.datuijo = datuijo;
+		//this.datuijo = datuijo;
+		flug_timer_zoom = false;
 	}
 	
 	public void paint(Mainpro mainpro) {
@@ -109,7 +110,12 @@ public class Bathroom extends Field{
 
 	@Override
 	String hint() {
-		if(datuijo.getFan()) return "風呂場と言えばやはり浴槽!!";
+		//Datuijoで換気扇のスイッチを奇数回押しているとき(換気扇がONの状態のとき)
+		if(mainpro.datuijo.getFan()) {
+			if(!flug_timer_zoom) return "風呂場と言えばやはり浴槽!!";
+			else return "あのタイマーの数字の意味はいったい・・・";
+		}
+		//換気扇がOFFの状態のとき
 		else return "湯気で何も見えない・・・";
 	}
 
@@ -118,7 +124,7 @@ public class Bathroom extends Field{
 		mainpro.buffer.drawImage(bathroom, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, field);
 		mainpro.buffer.drawImage(timer, 70, 70, 20, 20, field);
 		//脱衣所で換気扇のスイッチをONにしていなければ湯気を表示
-		if(!datuijo.getFan()) mainpro.buffer.drawImage(yuge, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, field);
+		if(!mainpro.datuijo.getFan()) mainpro.buffer.drawImage(yuge, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, field);
 	}
 
 	@Override

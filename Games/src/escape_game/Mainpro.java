@@ -9,6 +9,7 @@ package escape_game;
 // 実行/実行構成/パラメータ(タブ)で幅,高さのパラメータ変更を推奨(500,500)
 
 import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Font;
@@ -158,6 +159,14 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 
 	//部屋のリスト
 	ArrayList<String> roomStrList = new ArrayList<String>();
+	
+	//BGM用のインスタンス
+	//private SubThreadBGM bgm;
+	//private boolean boolBgm;
+	/**
+	 * タイトル用Bgm
+	 */
+	private AudioClip titleBgm;
 
 	public void init() {
 		//画面を500,500にセット
@@ -167,6 +176,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		}
 		//インスタンス初期化
 		mSaveDataManager = new SaveDataManager(this);
+		titleBgm = getAudioClip(getCodeBase(), "../sound_data/microwave.wav");
+		//bgm = new SubThreadBGM(this);
+		//boolBgm = false;
 		//マップ
 		westernStyleRoom = new WesternStyleRoom(this);
 		dk = new Dk(this);
@@ -320,10 +332,16 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 
 		set_window();
 		clean_setup();
+		
+		//タイトル画面でなければタイトル用のbgmを止める
+		if(!screenMode.equals("Title")) titleBgm.stop();
+		
 		if (screenMode.equals("Title")) {
 			//以下の１行でタイトル画像を表示
 			buffer.drawImage(title_gazo, 0, 0, screen_size_x, screen_size_y, this);
 			title.paint(this);
+			//bgmをループ再生
+			titleBgm.loop();
 		} else if (screenMode.equals("Tuto")) {
 			tuto.paint(this);
 		} else if (screenMode.equals(now_field.toString())) {
@@ -712,11 +730,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						}
 						String item = bag.get(bag_index);
 						//謎の紙を使用した場合
-						if(IconName.HINT_OF_HINT.equals(item)) {
-							zoom_hint_of_hint = true;
-						} else {
-							examine(item);
-						}
+						if(IconName.HINT_OF_HINT.equals(item)) zoom_hint_of_hint = true;
+						else examine(item);
 						clear_show_window();
 						is_show_bag = false;
 						break;

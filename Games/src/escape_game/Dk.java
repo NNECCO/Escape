@@ -1,9 +1,14 @@
 package escape_game;
 
+import java.applet.AudioClip;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class Dk extends Field {
 
@@ -87,7 +92,6 @@ public class Dk extends Field {
 
 	@Override
 	void examine_result(String ex_result) {
-		// TODO 自動生成されたメソッド・スタブ
 		
 	}
 
@@ -139,13 +143,15 @@ public class Dk extends Field {
 			} else if(examine_point.equals("table") && !key_yukasita) {
 				mainpro.message_add("床下収納がある!");
 				mainpro.message_add("けど鍵が掛かっているのか。開かない");
-			}
-			
-			if(examine_point.equals("Dk->japaneseStyleRoom1") && item.equals("DK-和室1の鍵") && !this.isDoor_wasitu1()) {
-				this.setDoor_wasitu1(true);
-				mainpro.message_add("(ガチャリとドアが開いた)");
-			} else if(examine_point.equals("Dk->japaneseStyleRoom1") && item.equals("DK-和室1の鍵") && this.isDoor_wasitu1()) {
-				mainpro.message_add("(もう開いてる)");
+			} else if(examine_point.equals("Dk->japaneseStyleRoom1")) {
+			    if (door_wasitu1) {
+			    	mainpro.message_add("(もう開いてる)");
+			    } else if(item.equals("DK-和室1の鍵") && !isDoor_wasitu1()) {
+					setDoor_wasitu1(true);
+					mainpro.message_add("(ガチャリとドアが開いた)");
+				} else {
+					mainpro.message_add("(鍵が掛かっている)");
+				}
 			}
 			
 		}
@@ -280,7 +286,8 @@ class DkTop extends Field{
 
 	private boolean isWCDoorOpen = false;
 	private boolean isDatuijoDoorOpen = false;
-
+	private AudioClip audioMicrowave;
+	
 	DkTop(Mainpro mainpro) {
 		this.mainpro = mainpro;
 	}
@@ -302,7 +309,7 @@ class DkTop extends Field{
 		} else if(340 < cx && cx <= 370 && cy < 100) {
 			return "DkTop->W.C";
 		} else if(340 < cx && 190 < cy) {
-			return "renji";
+			return "microwave";
 		} else if(cx < 130 && cy < 320) {
 			return "datuijo";
 		} else if(30 <= cx && cx <= 410 && 100 <= cy) {
@@ -313,15 +320,19 @@ class DkTop extends Field{
 
 	@Override
 	void examine_result(String ex_result) {
-		// TODO 自動生成されたメソッド・スタブ
-		
+		switch(ex_result) {
+			case "microwave":
+				audioMicrowave.play();				
+				break;
+		}
 	}
 
 	@Override
 	void examine_effect(String examine_point, String item) {
 		if(mainpro.entrance.getIsCheckDoor()) {
-			if(examine_point.equals("renji")) {
-				mainpro.message_add("何もない");
+			if(examine_point.equals("microwave")) {
+				mainpro.message_add("(チーーン♪)");
+				audioMicrowave.play();
 			} else if (examine_point.equals("DkTop->W.C")) {
 				if (isWCDoorOpen) {
 					mainpro.message_add("ドアは開いている");
@@ -380,6 +391,7 @@ class DkTop extends Field{
 		dk_base_top = mainpro.getImage(codeBase, "../material_data/escape_game/dk/dk_base_top.png");
 		dk_door_dressing_room = mainpro.getImage(codeBase, "../material_data/escape_game/dk/dk_dressing_room_door.png");
 		dk_door_wc = mainpro.getImage(codeBase, "../material_data/escape_game/dk/dk_toilet_door.png");
+		audioMicrowave = mainpro.getAudioClip(codeBase, "../sound_data/microwave.wav");
 		
 	}
 

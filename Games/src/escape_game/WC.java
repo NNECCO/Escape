@@ -95,7 +95,7 @@ public class WC extends Field{
 		switch(examine_point) {
 			case TOILET:
 				if (!isGotTriangleHint) {
-					mainpro.message_add("便器の蓋の上に何かがおかれている。");
+					mainpro.message_add("便器の蓋の上に何かが置かれている。");
 					mainpro.message_add("紙だ、何か書かれているみたいだ。");
 					mainpro.message_add("この家から出るヒントになるかもしれないし、持っていこう。");
 					mainpro.message_add("(ヒントらしきものが書かれた紙を手に入れた！)");
@@ -132,7 +132,7 @@ public class WC extends Field{
 				break;
 			case WINDOW:
 				if (!isCheckedWindow) {
-					mainpro.message_add("このドアは...まあ開くわけないよなぁ...");
+					mainpro.message_add("この窓は...まあ開くわけないよなぁ...");
 					isCheckedWindow = true;
 				} else {
 					mainpro.message_add("安定の頑丈さだぜ");
