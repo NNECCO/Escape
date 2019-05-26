@@ -21,7 +21,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,6 +37,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	 * japaneseStyleRoom2:和室2
 	 * datuijo:脱衣所
 	 * WC:トイレ
+	 * Ending:エンディング
 	 */
 	ArrayList<String> bag = new ArrayList<String>();
 	int screen_size_x = 500;
@@ -46,6 +46,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	NO_FIELD nothing_field = new NO_FIELD();
 	Title title = new Title();
 	Tutorial tuto = new Tutorial();
+	Ending ending = new Ending(this, screen_size_x, screen_size_y);
 	WesternStyleRoom westernStyleRoom;
 	Dk dk;
 	DkTop dkTop;
@@ -135,7 +136,6 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	//その他
 	Image title_gazo = null;//title用画像
 	Image hint_of_hint = null;
-	BufferedReader save_data = null;
 
 	//ここまで画像
 	ArrayList<String> message = new ArrayList<String>();//messageメッセージの保存
@@ -257,6 +257,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		roomStrList.add("JapaneseStyleRoom2");
 		roomStrList.add("Datuijo");
 		roomStrList.add("WC");
+		roomStrList.add("Bathroom");
 		//ここまで要素の追加
 		back = createImage(screen_size_x+2000,screen_size_y+1000);
 		buffer = back.getGraphics();
@@ -344,6 +345,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			titleBgm.loop();
 		} else if (screenMode.equals("Tuto")) {
 			tuto.paint(this);
+		} else if (screenMode.equals("Ending")) {
+			ending.paint(buffer);
 		} else if (screenMode.equals(now_field.toString())) {
 			buffer.fillRect(0, 0, 500, 400);//余白を黒にする 例:datuijo
 			show_map();
@@ -398,7 +401,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			;
 		else {
 			clean_setup();
-			showSaveDataButton();
+			if (is_show_buttons) {
+				showSaveDataButton();
+			}
 
 			// 時間表示は不要なためコメントアウト
 			// show_current_time();
@@ -544,8 +549,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			}
 		}
 		clean_setup();
-		buffer.drawString("here:     " + here_now, 250, 370);
-		buffer.drawString("examine:" + examine_point, 250, 390);
+		// デバッグ用：examineResult
+		// buffer.drawString("here:     " + here_now, 250, 370);
+		// buffer.drawString("examine:" + examine_point, 250, 390);
 		now_field.examine_result(examine_point);
 		is_examine = false;
 	}
@@ -683,6 +689,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		boolean isEntranceFlagChecked = false;
 		if (running == false) {
 			running = true;
 			th = new Thread(this);
@@ -779,6 +786,15 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 				} else {
 					message_add("セーブしたよ！！");
 				}
+			} else if (screenMode.equals("Ending")) {
+				//title画面に変更
+				screenMode = "Title";
+			}
+		}
+		if (screenMode.equals("Entrance") && !isEntranceFlagChecked) {
+			InputDialog dialog = entrance.getShownDialog();
+			if (dialog != null) {
+				dialog.onClick(e);
 			}
 		}
 	}
@@ -805,6 +821,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		boolean isEntranceFlagChecked = false;
 		zoom_hint_of_hint = false;
 		if (running == false) {
 			running = true;
@@ -841,6 +858,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 					text = now_field.texts.get(now_field.text_index);
 				}
 			}
+		} else if (screenMode.equals("Ending")) {
+			//title画面に変更
+			screenMode = "Title";
 		}
 		/*
 		 * DKの処理
@@ -879,6 +899,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 									now_field.setImages(getCodeBase());
 									player_x = 190;
 									player_y = 80;
+									isEntranceFlagChecked = true;
 
 								} else if (now_field == wc && now_field.here(player_x, player_y).equals(WC.DOOR_TO_DK)) {
 									/* WC -> DkTop */
@@ -1079,6 +1100,10 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 									now_field.setImages(getCodeBase());
 									player_x = 320;
 									player_y = 300;
+								} else if (now_field == entrance && now_field.here(player_x, player_y).equals("door")) {
+									screenMode = "Ending";
+									ending.setEndingImage();
+									is_show_buttons = false;
 								}
 							}
 						} else {
@@ -1315,6 +1340,12 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 				break;
 			}
 		}
+		if (screenMode.equals("Entrance") && !isEntranceFlagChecked) {
+			InputDialog dialog = entrance.getShownDialog();
+			if (dialog != null) {
+				dialog.onKeyPress(e);
+			}
+		}
 	}
 
 	@Override
@@ -1460,6 +1491,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			return datuijo;
 		else if (fieldName.equals("WC"))
 			return wc;
+		else if (fieldName.equals("Bathroom"))
+			return bathroom;
 		else
 			return null;
 	}

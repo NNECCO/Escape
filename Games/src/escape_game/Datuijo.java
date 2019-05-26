@@ -206,8 +206,17 @@ public class Datuijo extends Field{
 
 	@Override
 	void setFlagTrue(String flagString) {
-		// TODO 自動生成されたメソッド・スタブ
-		
+		if (flagString.equals("openDoor1")) {
+			openDoor1 = true;
+		} else if (flagString.equals("openDoor2")) {
+			openDoor2 = true;
+		} else if (flagString.equals("latm")) {
+			latm = true;
+		} else if (flagString.equals("setTap")) {
+			setTap = true;
+		} else if (flagString.equals("fan")) {
+			fan = true;
+		}
 	}
 
 	@Override
@@ -227,6 +236,9 @@ public class Datuijo extends Field{
 		}
 		if (setTap) {
 			trueFlags.add("setTap");
+		}
+		if (fan) {
+			trueFlags.add("fan");
 		}
 		return trueFlags;
 	}
