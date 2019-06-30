@@ -21,8 +21,10 @@ public class Entrance extends Field{
 
 	private InputDialog dialog;
 
-	private String[] answers = {"6", "3", "2", "3", "7"};
-
+	//private String[] answers = {"6", "3", "2", "3", "7"};
+	private String[] answers = {"0", "0", "0", "0", "0"};
+	
+	
 	Mainpro mainpro;
 
 	Entrance(Mainpro mainpro) {

@@ -1,7 +1,16 @@
 package escape_game;
 
+import java.applet.AudioClip;
 import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
 
 public class Title{
 	/**
@@ -9,6 +18,22 @@ public class Title{
 	 */
 	private ArrayList<String> title_name = new ArrayList<String>();
 	private boolean is_first_called = true;
+	private Sequencer bgm;
+	private Sequence sequence;
+	private final String path_Bgm = "../sound_data/game_maoudamashii_3_theme11.mid";
+	public Sequencer getBgm() { return bgm; }
+	private boolean play;
+	public boolean getPlay() { return play; }
+	
+	public Title() {}
+	
+	public Title(Mainpro mainpro) throws Exception {
+		bgm = MidiSystem.getSequencer();
+		sequence = MidiSystem.getSequence(new File(path_Bgm));
+		bgm.setSequence(sequence);
+		bgm.open();
+		play = false;
+	}
 	
 	public void paint(Mainpro mainpro) {
 		if (is_first_called == true) {
@@ -21,6 +46,10 @@ public class Title{
 				title_name.add(s2.get(i));
 			}
 			is_first_called = false;
+		}
+		if(!play) { 
+			bgm.start();
+			play = true;
 		}
 		//タイトル画面を描画
 		mainpro.buffer.setFont(mainpro.mb50);

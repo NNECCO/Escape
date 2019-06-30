@@ -1,7 +1,7 @@
 //20190421(playerX,playerY以外はtrueのものをカンマ区切りで記述。)
-playerX:130
-playerY:210
-field:Datuijo
+playerX:220
+playerY:180
+field:Entrance
 item:洋室-DKの鍵,ツナ缶,何かのヒント,可変式棒磁石,DK-脱衣所の鍵
 flag(Common):is_already_checked_bag
 flag(WesternStyleRoom):is_get_west_dk_key,is_get_magnet,is_open_door,is_checked_door

@@ -391,8 +391,7 @@ class DkTop extends Field{
 		dk_base_top = mainpro.getImage(codeBase, "../material_data/escape_game/dk/dk_base_top.png");
 		dk_door_dressing_room = mainpro.getImage(codeBase, "../material_data/escape_game/dk/dk_dressing_room_door.png");
 		dk_door_wc = mainpro.getImage(codeBase, "../material_data/escape_game/dk/dk_toilet_door.png");
-		audioMicrowave = mainpro.getAudioClip(codeBase, "../sound_data/microwave.wav");
-		
+		audioMicrowave = mainpro.getAudioClip(codeBase, "../sound_data/microwave.wav");		
 	}
 
 	@Override

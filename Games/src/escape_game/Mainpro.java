@@ -27,6 +27,7 @@ import java.util.HashMap;
 @SuppressWarnings("serial")
 public class Mainpro extends Applet implements KeyListener, MouseListener, MouseMotionListener, Runnable {
 	String screenMode = "Title";
+	public void setScreenMode(String screen) { screenMode = screen; }
 	/*
 	 * Title   :タイトル
 	 * Tuto:チュートリアル
@@ -44,9 +45,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	int screen_size_y = 500;
 	//画面のインスタンス
 	NO_FIELD nothing_field = new NO_FIELD();
-	Title title = new Title();
+	Title title;
 	Tutorial tuto = new Tutorial();
-	Ending ending = new Ending(this, screen_size_x, screen_size_y);
+	Ending ending;
 	WesternStyleRoom westernStyleRoom;
 	Dk dk;
 	DkTop dkTop;
@@ -160,14 +161,6 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	//部屋のリスト
 	ArrayList<String> roomStrList = new ArrayList<String>();
 	
-	//BGM用のインスタンス
-	//private SubThreadBGM bgm;
-	//private boolean boolBgm;
-	/**
-	 * タイトル用Bgm
-	 */
-	private AudioClip titleBgm;
-
 	public void init() {
 		//画面を500,500にセット
 		setSize(screen_size_x, screen_size_y);
@@ -175,10 +168,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			button_use_item[bIndex] = new Button("使う");
 		}
 		//インスタンス初期化
+		try { title = new Title(this); } catch(Exception e) { e.printStackTrace(); };
 		mSaveDataManager = new SaveDataManager(this);
-		titleBgm = getAudioClip(getCodeBase(), "../sound_data/microwave.wav");
-		//bgm = new SubThreadBGM(this);
-		//boolBgm = false;
 		//マップ
 		westernStyleRoom = new WesternStyleRoom(this);
 		dk = new Dk(this);
@@ -189,6 +180,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		datuijo = new Datuijo(this);
 		bathroom = new Bathroom(this, datuijo);
 		wc = new WC(this);
+		ending = new Ending(this, screen_size_x, screen_size_y);
+		try { ending.init(); } catch(Exception e) { e.printStackTrace(); };
 		now_field = westernStyleRoom;
 		now_field.setImages(getCodeBase());
 		//キャラクター
@@ -335,18 +328,22 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		clean_setup();
 		
 		//タイトル画面でなければタイトル用のbgmを止める
-		if(!screenMode.equals("Title")) titleBgm.stop();
+		if(!screenMode.equals("Title") && title.getPlay()) title.getBgm().stop();
+		//エンドロールでなければエンドロール用のbgmを止める
+		if(!screenMode.equals("Ending") && ending.getPlayEndroll()) ending.getBgmEndroll().stop();
+		//エンドカードでなければエンドカード用のbgmを止める
+		if(!screenMode.equals("EndCard") && ending.getPlayEndcard()) ending.getBgmEndcard().stop();
 		
 		if (screenMode.equals("Title")) {
 			//以下の１行でタイトル画像を表示
 			buffer.drawImage(title_gazo, 0, 0, screen_size_x, screen_size_y, this);
 			title.paint(this);
-			//bgmをループ再生
-			titleBgm.loop();
 		} else if (screenMode.equals("Tuto")) {
 			tuto.paint(this);
 		} else if (screenMode.equals("Ending")) {
-			ending.paint(buffer);
+			ending.paint(this);
+		} else if (screenMode.equals("EndCard")) {
+			ending.paint(this);
 		} else if (screenMode.equals(now_field.toString())) {
 			buffer.fillRect(0, 0, 500, 400);//余白を黒にする 例:datuijo
 			show_map();
