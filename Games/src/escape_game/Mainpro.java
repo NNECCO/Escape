@@ -477,7 +477,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		} else {
 			buffer.drawString("nothing in the bag", sb_left + item_icon_size + 10, sb_top + (separate_size / 10) * 6);
 		}
-		buffer.drawString(show_bag_page + "/" + ((bag.size() / separate_number) + 1)//page-index
+		buffer.drawString(show_bag_page + "/" + (((bag.size()-1) / 5) + 1)//page-index
 				, sb_left + 10,
 				sb_top + (sb_height / separate_number) * (separate_number - 1) + (separate_size / 10) * 6);
 		button_show_bag_prev.setLocation //prevボタンセット
