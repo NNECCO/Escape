@@ -9,7 +9,6 @@ package escape_game;
 // 実行/実行構成/パラメータ(タブ)で幅,高さのパラメータ変更を推奨(500,500)
 
 import java.applet.Applet;
-import java.applet.AudioClip;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Font;
@@ -88,11 +87,11 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	Button button_show_hint = new Button("show-hint [2]");
 	Button button_examine = new Button("examine [3]");
 	Button button_show_trophy = new Button("show-trophy [4]");
-	Button button_show_bag_prev = new Button("prev");
-	Button button_show_bag_next = new Button("next");
-	Button button_show_bag_close = new Button("close");//show-bag画面のcloseボタン
-	Button button_show_trophy_close = new Button("close");//show-hint画面のcloseボタン
-	private Button saveDataButton = new Button("data save[s]");//show-hint画面のcloseボタン
+	Button button_show_bag_prev = new Button("前[P]");
+	Button button_show_bag_next = new Button("次[N]");
+	Button button_show_bag_close = new Button("閉じる[C]");//show-bag画面のcloseボタン
+	Button button_show_trophy_close = new Button("閉じる[C]");//show-hint画面のcloseボタン
+	private Button saveDataButton = new Button("data save[S]");//show-hint画面のcloseボタン
 
 	//バッグにあるアイテム使用ボタン
 	Button[] button_use_item = new Button[5];
@@ -149,10 +148,10 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	String screen_error_message = "";
 	//バッグを既に確認しているか
 	boolean is_already_checked_bag = false;
-	
+
 	//画像を大きく表示する際のフラグ
 	public boolean zoom_hint_of_hint = false;
-	
+
 	//ex) examine_range= 50 -> 現地点 ~ 現地点から50ポイント離れた地点
 
 	// セーブ機能管理クラスのインスタンス
@@ -160,12 +159,12 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 
 	//部屋のリスト
 	ArrayList<String> roomStrList = new ArrayList<String>();
-	
+
 	public void init() {
 		//画面を500,500にセット
 		setSize(screen_size_x, screen_size_y);
 		for (int bIndex = 0;bIndex < button_use_item.length;bIndex++) {
-			button_use_item[bIndex] = new Button("使う");
+			button_use_item[bIndex] = new Button("使う[F" + (bIndex + 1) + "]");
 		}
 		//インスタンス初期化
 		try { title = new Title(this); } catch(Exception e) { e.printStackTrace(); };
@@ -326,14 +325,14 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 
 		set_window();
 		clean_setup();
-		
+
 		//タイトル画面でなければタイトル用のbgmを止める
 		if(!screenMode.equals("Title") && title.getPlay()) title.getBgm().stop();
 		//エンドロールでなければエンドロール用のbgmを止める
 		if(!screenMode.equals("Ending") && ending.getPlayEndroll()) ending.getBgmEndroll().stop();
 		//エンドカードでなければエンドカード用のbgmを止める
 		if(!screenMode.equals("EndCard") && ending.getPlayEndcard()) ending.getBgmEndcard().stop();
-		
+
 		if (screenMode.equals("Title")) {
 			//以下の１行でタイトル画像を表示
 			buffer.drawImage(title_gazo, 0, 0, screen_size_x, screen_size_y, this);
@@ -409,15 +408,15 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		is_next = false;
 		if (screen_error == true)
 			show_screen_error();
-		
+
 		//bagで謎の紙を使用したときに大きく表示する
 		if(zoom_hint_of_hint) {
 			buffer.drawImage(hint_of_hint, 0, 0, screen_size_x, screen_size_y-100, this);
 		}
-		
+
 		g.drawImage(back, 0, 0, this);
 	}
-	
+
 
 	// セーブボタンを配置する
 	private void showSaveDataButton() {
@@ -482,13 +481,13 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 				, sb_left + 10,
 				sb_top + (sb_height / separate_number) * (separate_number - 1) + (separate_size / 10) * 6);
 		button_show_bag_prev.setLocation //prevボタンセット
-		(sb_left + (sb_width - 10) / 4,
+		(sb_left + (sb_width - 10) / 20 * 5,
 				sb_top + (sb_height / separate_number) * (separate_number - 1) + (separate_size / 10) * 6 - 10);
 		button_show_bag_next.setLocation //nextボタンセット
-		(sb_left + (sb_width - 10) / 4 * 2,
+		(sb_left + (sb_width - 10) / 20 * 10,
 				sb_top + (sb_height / separate_number) * (separate_number - 1) + (separate_size / 10) * 6 - 10);
 		button_show_bag_close.setLocation //closeボタンセット
-		(sb_left + (sb_width - 10) / 4 * 3,
+		(sb_left + (sb_width - 10) / 20 * 15,
 				sb_top + (sb_height / separate_number) * (separate_number - 1) + (separate_size / 10) * 6 - 10);
 		clean_setup();
 	}
@@ -1333,6 +1332,34 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 					message_add("セーブ失敗！！");
 				} else {
 					message_add("セーブしたよ！！");
+				}
+				break;
+			case KeyEvent.VK_P:
+				//click prev(on show-bag window)
+				if (is_show_bag) {
+					if ((show_bag_page - 1) * 5 - 1 >= 0) {
+						show_bag_page--;
+					}
+				}
+				break;
+			case KeyEvent.VK_N:
+				//click next(on show-bag window)
+				if (is_show_bag) {
+					//bagの中に6このアイテム-> size=6(max-index=5),page1->2 =>1(show_bag_page)*5=5
+					if (show_bag_page * 5 <= bag.size() - 1) {
+						show_bag_page++;
+					}
+				}
+				break;
+			case KeyEvent.VK_C:
+				if (is_show_bag) {
+					//click close(on show-bag window)
+					clear_show_window();
+					is_show_bag = false;
+				} else if (is_show_trophy) {
+					//click close(on show-hint window)
+					clear_show_window();
+					is_show_trophy = false;
 				}
 				break;
 			}

@@ -21,10 +21,10 @@ public class Entrance extends Field{
 
 	private InputDialog dialog;
 
-	//private String[] answers = {"6", "3", "2", "3", "7"};
-	private String[] answers = {"0", "0", "0", "0", "0"};
-	
-	
+	private String[] answers = {"6", "3", "2", "3", "7"};
+	// private String[] answers = {"0", "0", "0", "0", "0"};
+
+
 	Mainpro mainpro;
 
 	Entrance(Mainpro mainpro) {
@@ -34,9 +34,9 @@ public class Entrance extends Field{
 		this.latd = false;
 		//texts = new ArrayList<String>();
 		/* 序盤 */
-		
+
 	}
-	
+
 	public void paint(Mainpro mainpro) {
 		//玄関の模様を調べているとき
 		if(latd) {
@@ -98,7 +98,7 @@ public class Entrance extends Field{
 		}
 		super.paint(mainpro);
 	}
-	
+
 	/**
 	 * あたり判定の結果を返す
 	 */
@@ -109,10 +109,10 @@ public class Entrance extends Field{
 		} else if(here.equals("door") && opened) {
 			return true;
 		} else {
-			return false;			
+			return false;
 		}
 	}
-	
+
 	/**
 	 * あたり判定
 	 */
@@ -121,7 +121,7 @@ public class Entrance extends Field{
 			return "door";
 		} else if(150 <= cx && cx <= 310 && 300 <= cy) {
 			return "Entrance->DkTop";
-		} else if(cx < 130 && cy < 270) { 
+		} else if(cx < 130 && cy < 270) {
 			return "getabako";
 		} else if(10 <= cx && cx <= 410 && 80 <= cy && cy + mainpro.character_size_y <= 360) {
 			return "inside";
@@ -176,14 +176,14 @@ public class Entrance extends Field{
 		if(!opened) {
 			mainpro.buffer.drawImage(gennkann, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);
 		} else {
-			mainpro.buffer.drawImage(gennkann2, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);			
+			mainpro.buffer.drawImage(gennkann2, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);
 		}
 
 	}
 
 	@Override
 	void setImages(URL codeBase) {
-		gennkann = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/gennkann.png");		
+		gennkann = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/gennkann.png");
 		gennkann2 = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/gennkann2.png");
 		moyou = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/moyou.png");
 		moyouForDialog = mainpro.getImage(codeBase, "../material_data/escape_game/entrance/moyou_for_dialog.png");
