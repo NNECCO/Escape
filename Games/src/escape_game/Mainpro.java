@@ -26,7 +26,11 @@ import java.util.HashMap;
 @SuppressWarnings("serial")
 public class Mainpro extends Applet implements KeyListener, MouseListener, MouseMotionListener, Runnable {
 	String screenMode = "Title";
-	public void setScreenMode(String screen) { screenMode = screen; }
+
+	public void setScreenMode(String screen) {
+		screenMode = screen;
+	}
+
 	/*
 	 * Title   :タイトル
 	 * Tuto:チュートリアル
@@ -163,11 +167,16 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	public void init() {
 		//画面を500,500にセット
 		setSize(screen_size_x, screen_size_y);
-		for (int bIndex = 0;bIndex < button_use_item.length;bIndex++) {
+		for (int bIndex = 0; bIndex < button_use_item.length; bIndex++) {
 			button_use_item[bIndex] = new Button("使う[F" + (bIndex + 1) + "]");
 		}
 		//インスタンス初期化
-		try { title = new Title(this); } catch(Exception e) { e.printStackTrace(); };
+		try {
+			title = new Title(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		;
 		mSaveDataManager = new SaveDataManager(this);
 		//マップ
 		westernStyleRoom = new WesternStyleRoom(this);
@@ -180,39 +189,46 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		bathroom = new Bathroom(this, datuijo);
 		wc = new WC(this);
 		ending = new Ending(this, screen_size_x, screen_size_y);
-		try { ending.init(); } catch(Exception e) { e.printStackTrace(); };
+		try {
+			ending.init();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		;
 		now_field = westernStyleRoom;
 		now_field.setImages(getCodeBase());
 		//キャラクター
-		player_icon = getImage(getCodeBase(),"../material_data/escape_game/person/person_icon.png");
-		c_f = getImage(getCodeBase(),"../material_data/escape_game/person/person_front.png");
-		c_l = getImage(getCodeBase(),"../material_data/escape_game/person/person_left.png");
-		c_b = getImage(getCodeBase(),"../material_data/escape_game/person/person_back.png");
-		c_r = getImage(getCodeBase(),"../material_data/escape_game/person/person_right.png");
+		player_icon = getImage(getCodeBase(), "../material_data/escape_game/person/person_icon.png");
+		c_f = getImage(getCodeBase(), "../material_data/escape_game/person/person_front.png");
+		c_l = getImage(getCodeBase(), "../material_data/escape_game/person/person_left.png");
+		c_b = getImage(getCodeBase(), "../material_data/escape_game/person/person_back.png");
+		c_r = getImage(getCodeBase(), "../material_data/escape_game/person/person_right.png");
 		//アイテムアイコン
 		{
 			//westroom
-			icon_dk_west_key   = getImage(getCodeBase(),"../material_data/escape_game/itemicon/ICON_dk_westroom_key.png");
-			icon_flashlight = getImage(getCodeBase(),"../material_data/escape_game/itemicon/ICON_flashlight.png");
-			icon_magnet     = getImage(getCodeBase(),"../material_data/escape_game/itemicon/ICON_magnet.png");
-			icon_cutter     = getImage(getCodeBase(),"../material_data/escape_game/itemicon/ICON_cutter.png");
+			icon_dk_west_key = getImage(getCodeBase(),
+					"../material_data/escape_game/itemicon/ICON_dk_westroom_key.png");
+			icon_flashlight = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_flashlight.png");
+			icon_magnet = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_magnet.png");
+			icon_cutter = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_cutter.png");
 			//dk
-			icon_dk_jsr1_key = getImage(getCodeBase(),"../material_data/escape_game/itemicon/ICON_dk_jsr1_key.png");
-			icon_hint = getImage(getCodeBase(),"../material_data/escape_game/itemicon/ICON_hint.png");
-			icon_jyuendama = getImage(getCodeBase(),"../material_data/escape_game/itemicon/ICON_jyuendama.png");
-			icon_tap = getImage(getCodeBase(),"../material_data/escape_game/itemicon/ICON_tap.png");
-			icon_tunakan = getImage(getCodeBase(),"../material_data/escape_game/itemicon/ICON_tunakan.png");
+			icon_dk_jsr1_key = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_dk_jsr1_key.png");
+			icon_hint = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_hint.png");
+			icon_jyuendama = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_jyuendama.png");
+			icon_tap = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_tap.png");
+			icon_tunakan = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_tunakan.png");
 			//jsr2
 			icon_tutu = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_tutu.png");
 			icon_yukasita_key = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_yukasita_key.png");
 			//wc
 			icon_datuijo_key = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_datuijo_key.png");
-			icon_triangle_hint = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_triangle_hint.png");
+			icon_triangle_hint = getImage(getCodeBase(),
+					"../material_data/escape_game/itemicon/ICON_triangle_hint.png");
 			//datuijo
 			//icon_triangle_key = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_triangle_key.png");
 			icon_hint_of_hint = getImage(getCodeBase(), "../material_data/escape_game/itemicon/ICON_hint_of_hint.png");
 			//その他
-			title_gazo = getImage(getCodeBase(),"../material_data/escape_game/other/title_gazo.png");
+			title_gazo = getImage(getCodeBase(), "../material_data/escape_game/other/title_gazo.png");
 			hint_of_hint = getImage(getCodeBase(), "../material_data/escape_game/datuijo/hint_of_hint_zoom.png");
 		}
 		//ここまで画像
@@ -251,7 +267,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		roomStrList.add("WC");
 		roomStrList.add("Bathroom");
 		//ここまで要素の追加
-		back = createImage(screen_size_x+2000,screen_size_y+1000);
+		back = createImage(screen_size_x + 2000, screen_size_y + 1000);
 		buffer = back.getGraphics();
 		add(button_show_bag);
 		add(button_show_hint);
@@ -262,7 +278,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		add(button_show_bag_close);
 		add(button_show_trophy_close);
 		add(saveDataButton);
-		for (int bIndex = 0;bIndex < button_use_item.length;bIndex++) {
+		for (int bIndex = 0; bIndex < button_use_item.length; bIndex++) {
 			add(button_use_item[bIndex]);
 		}
 		button_show_hint.addMouseListener(this);
@@ -292,7 +308,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		saveDataButton.addMouseListener(this);
 		saveDataButton.addMouseMotionListener(this);
 		saveDataButton.addKeyListener(this);
-		for (int bIndex = 0;bIndex < button_use_item.length;bIndex++) {
+		for (int bIndex = 0; bIndex < button_use_item.length; bIndex++) {
 			button_use_item[bIndex].addMouseListener(this);
 			button_use_item[bIndex].addMouseMotionListener(this);
 			button_use_item[bIndex].addKeyListener(this);
@@ -327,11 +343,14 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		clean_setup();
 
 		//タイトル画面でなければタイトル用のbgmを止める
-		if(!screenMode.equals("Title") && title.getPlay()) title.getBgm().stop();
+		if (!screenMode.equals("Title") && title.getPlay())
+			title.getBgm().stop();
 		//エンドロールでなければエンドロール用のbgmを止める
-		if(!screenMode.equals("Ending") && ending.getPlayEndroll()) ending.getBgmEndroll().stop();
+		if (!screenMode.equals("Ending") && ending.getPlayEndroll())
+			ending.getBgmEndroll().stop();
 		//エンドカードでなければエンドカード用のbgmを止める
-		if(!screenMode.equals("EndCard") && ending.getPlayEndcard()) ending.getBgmEndcard().stop();
+		if (!screenMode.equals("EndCard") && ending.getPlayEndcard())
+			ending.getBgmEndcard().stop();
 
 		if (screenMode.equals("Title")) {
 			//以下の１行でタイトル画像を表示
@@ -410,13 +429,12 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			show_screen_error();
 
 		//bagで謎の紙を使用したときに大きく表示する
-		if(zoom_hint_of_hint) {
-			buffer.drawImage(hint_of_hint, 0, 0, screen_size_x, screen_size_y-100, this);
+		if (zoom_hint_of_hint) {
+			buffer.drawImage(hint_of_hint, 0, 0, screen_size_x, screen_size_y - 100, this);
 		}
 
 		g.drawImage(back, 0, 0, this);
 	}
-
 
 	// セーブボタンを配置する
 	private void showSaveDataButton() {
@@ -477,7 +495,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		} else {
 			buffer.drawString("nothing in the bag", sb_left + item_icon_size + 10, sb_top + (separate_size / 10) * 6);
 		}
-		buffer.drawString(show_bag_page + "/" + (((bag.size()-1) / 5) + 1)//page-index
+		buffer.drawString(show_bag_page + "/" + (((bag.size() - 1) / 5) + 1)//page-index
 				, sb_left + 10,
 				sb_top + (sb_height / separate_number) * (separate_number - 1) + (separate_size / 10) * 6);
 		button_show_bag_prev.setLocation //prevボタンセット
@@ -733,8 +751,10 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						}
 						String item = bag.get(bag_index);
 						//謎の紙を使用した場合
-						if(IconName.HINT_OF_HINT.equals(item)) zoom_hint_of_hint = true;
-						else examine(item);
+						if (IconName.HINT_OF_HINT.equals(item))
+							zoom_hint_of_hint = true;
+						else
+							examine(item);
 						clear_show_window();
 						is_show_bag = false;
 						break;
@@ -776,7 +796,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 					}
 				}
 			} else if (e.getSource() == saveDataButton) {
-				if(!mSaveDataManager.writeSaveData()) {
+				if (!mSaveDataManager.writeSaveData()) {
 					System.out.println("save data fail");
 					message_add("セーブ失敗！！");
 				} else {
@@ -897,7 +917,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 									player_y = 80;
 									isEntranceFlagChecked = true;
 
-								} else if (now_field == wc && now_field.here(player_x, player_y).equals(WC.DOOR_TO_DK)) {
+								} else if (now_field == wc
+										&& now_field.here(player_x, player_y).equals(WC.DOOR_TO_DK)) {
 									/* WC -> DkTop */
 									now_field = dkTop;
 									screenMode = "DkTop";
@@ -1167,7 +1188,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 									now_field.setImages(getCodeBase());
 									player_x = 40;
 									player_y = 70;
-								} else if(410 < player_x && 160 <= player_y && player_y <= 230 && now_field == bathroom) {
+								} else if (410 < player_x && 160 <= player_y && player_y <= 230
+										&& now_field == bathroom) {
 									/* Bathroom -> Datuijo*/
 									now_field = datuijo;
 									screenMode = "Datuijo";
@@ -1327,7 +1349,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 				}
 				break;
 			case KeyEvent.VK_S:
-				if(!mSaveDataManager.writeSaveData()) {
+				if (!mSaveDataManager.writeSaveData()) {
 					System.out.println("save data fail");
 					message_add("セーブ失敗！！");
 				} else {

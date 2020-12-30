@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import escape_game.InputDialog.ResultListener;
 
-public class Entrance extends Field{
+public class Entrance extends Field {
 
 	Image gennkann;//扉あり
 	Image gennkann2;//扉なし
@@ -21,9 +21,8 @@ public class Entrance extends Field{
 
 	private InputDialog dialog;
 
-	private String[] answers = {"6", "3", "2", "3", "7"};
+	private String[] answers = { "6", "3", "2", "9", "7" };
 	// private String[] answers = {"0", "0", "0", "0", "0"};
-
 
 	Mainpro mainpro;
 
@@ -39,15 +38,16 @@ public class Entrance extends Field{
 
 	public void paint(Mainpro mainpro) {
 		//玄関の模様を調べているとき
-		if(latd) {
-			mainpro.buffer.drawImage(moyou, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mainpro);
-			if(mainpro.message.get(0).equals("nothing")) {
+		if (latd) {
+			mainpro.buffer.drawImage(moyou, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y - 100, mainpro);
+			if (mainpro.message.get(0).equals("nothing")) {
 				latd = false;
 			}
 			// 脱出用ダイアログ
 			if (dialog == null) {
 				// mainpro.message_add("何か入力してみるか...");
-				dialog = new InputDialog(mainpro, mainpro.buffer, mainpro, mainpro , 250, 200, 200, 200, null, moyouForDialog, answers);
+				dialog = new InputDialog(mainpro, mainpro.buffer, mainpro, mainpro, 250, 200, 200, 200, null,
+						moyouForDialog, answers);
 				dialog.updateScreenSize(mainpro.screen_size_x, mainpro.screen_size_y);
 				dialog.setTitleImg(moyouForDialog);
 				dialog.setAnswers(answers);
@@ -66,7 +66,8 @@ public class Entrance extends Field{
 
 						for (int index = 0; index < answers.length; index++) {
 							String tgtSelection = selections[selectionIndex[index]];
-							System.out.println("selections[" + index +"]: " + tgtSelection + ", answers[" + index + "]: " + answers[index]);
+							System.out.println("selections[" + index + "]: " + tgtSelection + ", answers[" + index
+									+ "]: " + answers[index]);
 
 							if (!tgtSelection.equals(answers[index])) {
 								System.out.println("password-mismatch...");
@@ -87,8 +88,7 @@ public class Entrance extends Field{
 				});
 			}
 			dialog.show(mainpro.buffer);
-		}
-		else if (dialog != null) {
+		} else if (dialog != null) {
 			if (dialog.getIsInputDialogShown()) {
 				dialog.show(mainpro.buffer);
 			} else {
@@ -104,9 +104,9 @@ public class Entrance extends Field{
 	 */
 	boolean is_character_in(int cx, int cy) {
 		String here = here(cx, cy);
-		if(here.equals("inside") || here.equals("Entrance->DkTop")) {
+		if (here.equals("inside") || here.equals("Entrance->DkTop")) {
 			return true;
-		} else if(here.equals("door") && opened) {
+		} else if (here.equals("door") && opened) {
 			return true;
 		} else {
 			return false;
@@ -117,13 +117,13 @@ public class Entrance extends Field{
 	 * あたり判定
 	 */
 	String here(int cx, int cy) {
-		if(150 <= cx && cx <= 270 && cy < 80) {
+		if (150 <= cx && cx <= 270 && cy < 80) {
 			return "door";
-		} else if(150 <= cx && cx <= 310 && 300 <= cy) {
+		} else if (150 <= cx && cx <= 310 && 300 <= cy) {
 			return "Entrance->DkTop";
-		} else if(cx < 130 && cy < 270) {
+		} else if (cx < 130 && cy < 270) {
 			return "getabako";
-		} else if(10 <= cx && cx <= 410 && 80 <= cy && cy + mainpro.character_size_y <= 360) {
+		} else if (10 <= cx && cx <= 410 && 80 <= cy && cy + mainpro.character_size_y <= 360) {
 			return "inside";
 		}
 		return "wall";
@@ -131,8 +131,8 @@ public class Entrance extends Field{
 
 	@Override
 	void examine_result(String examine_point) {
-		if(examine_point.equals("door")) {
-			if(!opened) {
+		if (examine_point.equals("door")) {
+			if (!opened) {
 				latd = true;
 			}
 		}
@@ -140,8 +140,8 @@ public class Entrance extends Field{
 
 	@Override
 	void examine_effect(String examine_point, String item) {
-		if(examine_point.equals("door")) {
-			if(!opened && !isCheckDoor) {
+		if (examine_point.equals("door")) {
+			if (!opened && !isCheckDoor) {
 				examine_result(examine_point);
 				mainpro.message_add("・・・・・開かない");
 				mainpro.message_add("この扉の模様・・・何か入力しないと開かないってわけか");
@@ -162,10 +162,10 @@ public class Entrance extends Field{
 
 	@Override
 	String hint() {
-		String message="玄関を開けるためのヒントを探そう";
-		if(!this.getIsCheckDoor()) {
+		String message = "玄関を開けるためのヒントを探そう";
+		if (!this.getIsCheckDoor()) {
 			message = "玄関だ!";
-		} else if(this.getIsCheckDoor()) {
+		} else if (this.getIsCheckDoor()) {
 			message = "扉のあの模様が手掛かりだよな・・・";
 		}
 		return message;
@@ -173,10 +173,10 @@ public class Entrance extends Field{
 
 	@Override
 	void showMap(ImageObserver mapr) {
-		if(!opened) {
-			mainpro.buffer.drawImage(gennkann, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);
+		if (!opened) {
+			mainpro.buffer.drawImage(gennkann, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y - 100, mapr);
 		} else {
-			mainpro.buffer.drawImage(gennkann2, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y-100, mapr);
+			mainpro.buffer.drawImage(gennkann2, 0, 0, mainpro.screen_size_x, mainpro.screen_size_y - 100, mapr);
 		}
 
 	}
@@ -210,10 +210,14 @@ public class Entrance extends Field{
 
 	@Override
 	void setFlagTrue(String flagString) {
-		if (flagString.equals("isCheckDoor")) isCheckDoor = true;
-		else if (flagString.equals("opened")) opened = true;
-		else if (flagString.equals("latd")) latd = true;
-		else System.out.println("次のフラグ名に対応するフラグはありませんでした:"+flagString);
+		if (flagString.equals("isCheckDoor"))
+			isCheckDoor = true;
+		else if (flagString.equals("opened"))
+			opened = true;
+		else if (flagString.equals("latd"))
+			latd = true;
+		else
+			System.out.println("次のフラグ名に対応するフラグはありませんでした:" + flagString);
 	}
 
 	@Override
