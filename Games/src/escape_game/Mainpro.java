@@ -93,9 +93,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	Button button_show_trophy = new Button("show-trophy [4]");
 	Button button_show_bag_prev = new Button("前[P]");
 	Button button_show_bag_next = new Button("次[N]");
-	Button button_show_bag_close = new Button("閉じる[C]");//show-bag画面のcloseボタン
-	Button button_show_trophy_close = new Button("閉じる[C]");//show-hint画面のcloseボタン
-	private Button saveDataButton = new Button("data save[S]");//show-hint画面のcloseボタン
+	private Button closeButton = new Button("閉じる[C]");
+	private Button saveDataButton = new Button("data-save[S]");
+	private Button showLogButton = new Button("show-log[L]");
 
 	//バッグにあるアイテム使用ボタン
 	Button[] button_use_item = new Button[5];
@@ -104,6 +104,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	boolean is_show_hint = false;
 	boolean is_examine = false;
 	boolean is_show_trophy = false;
+	private boolean isShowLog = false;
 	int button_size_x = 100;
 	int button_size_y = 50;
 	ArrayList<String> trophy = new ArrayList<String>();
@@ -143,6 +144,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 
 	//ここまで画像
 	ArrayList<String> message = new ArrayList<String>();//messageメッセージの保存
+	private ArrayList<String> logText = new ArrayList<String>();
+
 	int shown_message_length = 0;//実際に出力するメッセージの行数
 	int shown_message_index = 0;//実際に出力するメッセージの先頭要素のindex(分割したメッセージの内一番上にくるメッセージのindex)
 	boolean shown_message_first = true;
@@ -275,9 +278,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		add(button_show_trophy);
 		add(button_show_bag_prev);
 		add(button_show_bag_next);
-		add(button_show_bag_close);
-		add(button_show_trophy_close);
+		add(closeButton);
 		add(saveDataButton);
+		add(showLogButton);
 		for (int bIndex = 0; bIndex < button_use_item.length; bIndex++) {
 			add(button_use_item[bIndex]);
 		}
@@ -299,15 +302,15 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		button_show_bag_next.addMouseListener(this);
 		button_show_bag_next.addMouseMotionListener(this);
 		button_show_bag_next.addKeyListener(this);
-		button_show_bag_close.addMouseListener(this);
-		button_show_bag_close.addMouseMotionListener(this);
-		button_show_bag_close.addKeyListener(this);
-		button_show_trophy_close.addMouseListener(this);
-		button_show_trophy_close.addMouseMotionListener(this);
-		button_show_trophy_close.addKeyListener(this);
+		closeButton.addMouseListener(this);
+		closeButton.addMouseMotionListener(this);
+		closeButton.addKeyListener(this);
 		saveDataButton.addMouseListener(this);
 		saveDataButton.addMouseMotionListener(this);
 		saveDataButton.addKeyListener(this);
+		showLogButton.addMouseListener(this);
+		showLogButton.addMouseMotionListener(this);
+		showLogButton.addKeyListener(this);
 		for (int bIndex = 0; bIndex < button_use_item.length; bIndex++) {
 			button_use_item[bIndex].addMouseListener(this);
 			button_use_item[bIndex].addMouseMotionListener(this);
@@ -331,9 +334,10 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			button_show_trophy.setLocation(screen_size_x + 2000, screen_size_y + 100);
 			button_show_bag_prev.setLocation(screen_size_x + 2000, screen_size_y + 100);
 			button_show_bag_next.setLocation(screen_size_x + 2000, screen_size_y + 100);
-			button_show_bag_close.setLocation(screen_size_x + 2000, screen_size_y + 100);
-			button_show_trophy_close.setLocation(screen_size_x + 2000, screen_size_y + 100);
+			closeButton.setLocation(screen_size_x + 2000, screen_size_y + 100);
+			closeButton.setLocation(screen_size_x + 2000, screen_size_y + 100);
 			saveDataButton.setLocation(screen_size_x + 2000, screen_size_y + 100);
+			showLogButton.setLocation(screen_size_x + 2000, screen_size_y + 100);
 			for (int bIndex = 0; bIndex < button_use_item.length; bIndex++) {
 				button_use_item[bIndex].setLocation(screen_size_x + 2000, screen_size_y + 100);
 			}
@@ -376,6 +380,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 				button_examine.setSize(button_size_x, button_size_y);
 				button_show_trophy.setLocation(0 + button_size_x * 3, screen_size_y - 100);
 				button_show_trophy.setSize(button_size_x, button_size_y);
+				showDispLogButton();
 				//messageメッセージを出力
 				buffer.setFont(mp15);
 				int line = -1;
@@ -409,6 +414,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 				examine("");
 			else if (is_show_trophy)
 				show_trophy();
+			else if (isShowLog) {
+				showLog();
+			}
 		}
 
 		if (screenMode.equals("Title")
@@ -441,6 +449,26 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		saveDataButton.setLocation(screen_size_x - 100 + 1, screen_size_y - 100 + 1);
 		saveDataButton.setSize(100 - 2, 50 - 2);
 		buffer.drawLine(400, 400, 400, 500);
+	}
+
+	// Log表示ボタンを配置する
+	private void showDispLogButton() {
+		showLogButton.setLocation(screen_size_x - 100 + 1, screen_size_y - button_size_y);
+		showLogButton.setSize(button_size_x, button_size_y);
+	}
+
+	private void makeFullBlackScreen(String title, Button closeButton) {
+		clean_setup();
+		buffer.fillRect(0, 0, screen_size_x, screen_size_y - 100);
+		buffer.setColor(Color.white);
+		if (title != null && title != "") {
+			// タイトル
+			buffer.drawString(title, 10, 20);
+			buffer.drawLine(0, 30, screen_size_x, 30);
+			if (closeButton != null) {
+				closeButton.setLocation(400, 5);
+			}
+		}
 	}
 
 	void show_current_time() {
@@ -504,7 +532,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		button_show_bag_next.setLocation //nextボタンセット
 		(sb_left + (sb_width - 10) / 20 * 10,
 				sb_top + (sb_height / separate_number) * (separate_number - 1) + (separate_size / 10) * 6 - 10);
-		button_show_bag_close.setLocation //closeボタンセット
+		closeButton.setLocation //closeボタンセット
 		(sb_left + (sb_width - 10) / 20 * 15,
 				sb_top + (sb_height / separate_number) * (separate_number - 1) + (separate_size / 10) * 6 - 10);
 		clean_setup();
@@ -595,9 +623,32 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		buffer.drawString(0 + "", st_left + 50, st_top + 220 + 50);
 		buffer.setFont(mp15);
 		buffer.drawString("%", st_left + 80, st_top + 220 + 50);
-		button_show_trophy_close.setLocation //closeボタンセット
+		closeButton.setLocation //closeボタンセット
 		(st_left + st_width * 2 / 3,
 				st_top + 220 + 30);
+	}
+
+	private void showLog() {
+		makeFullBlackScreen("Log", closeButton);
+		int currentYPosition = 50;
+		ArrayList<String> shownLogList = new ArrayList<String>();
+		for (String text : logText) {
+			ArrayList<String> separatedTextList = message_separate(text, 44);
+			for (String separatedText : separatedTextList) {
+				if (screen_size_y - 120 < currentYPosition) {
+					shownLogList.remove(0);
+				} else {
+					currentYPosition += 20;
+				}
+				shownLogList.add(separatedText);
+			}
+		}
+		for (int logIndex = 0; logIndex < shownLogList.size(); logIndex++) {
+			String logText = shownLogList.get(logIndex);
+			buffer.setColor(Color.white);
+			buffer.drawString(logText, 10, 50 + 20 * logIndex);
+		}
+		clean_setup();
 	}
 
 	ArrayList<String> message_separate(String statement, int s_size) {
@@ -675,8 +726,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	void clear_show_button() {
 		button_show_bag_prev.setLocation(screen_size_x + 2000, screen_size_y + 100);
 		button_show_bag_next.setLocation(screen_size_x + 2000, screen_size_y + 100);
-		button_show_bag_close.setLocation(screen_size_x + 2000, screen_size_y + 100);
-		button_show_trophy_close.setLocation(screen_size_x + 2000, screen_size_y + 100);
+		closeButton.setLocation(screen_size_x + 2000, screen_size_y + 100);
+		closeButton.setLocation(screen_size_x + 2000, screen_size_y + 100);
 		for (int bIndex = 0; bIndex < button_use_item.length; bIndex++) {
 			button_use_item[bIndex].setLocation(screen_size_x + 2000, screen_size_y + 100);
 		}
@@ -687,6 +738,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 		is_show_hint = false;
 		is_examine = false;
 		is_show_trophy = false;
+		isShowLog = false;
 	}
 
 	@Override
@@ -726,6 +778,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 				func_pressed_examine_button();
 			} else if (e.getSource() == button_show_trophy && is_show_buttons == true) {//click show-trophy
 				func_pressed_show_trophy_button();
+			} else if (e.getSource() == showLogButton && is_show_buttons == true) {
+				pressedShowLogButton();
 			} else if (is_show_bag && e.getSource() == button_show_bag_prev) {//click prev(on show-bag window)
 				if ((show_bag_page - 1) * 5 - 1 >= 0) {
 					show_bag_page--;
@@ -734,12 +788,17 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 				if (show_bag_page * 5 <= bag.size() - 1) {//bagの中に6このアイテム-> size=6(max-index=5),page1->2 =>1(show_bag_page)*5=5
 					show_bag_page++;
 				}
-			} else if (is_show_bag && e.getSource() == button_show_bag_close) {//click close(on show-bag window)
-				clear_show_window();
-				is_show_bag = false;
-			} else if (is_show_trophy && e.getSource() == button_show_trophy_close) {//click close(on show-hint window)
-				clear_show_window();
-				is_show_trophy = false;
+			} else if (e.getSource() == closeButton) {
+				if (is_show_bag) {
+					clear_show_window();
+					is_show_bag = false;
+				} else if (is_show_trophy) {
+					clear_show_window();
+					is_show_trophy = false;
+				} else if (isShowLog) {
+					clear_show_window();
+					isShowLog = false;
+				}
 			} else if (is_show_bag) {
 				//show-bag画面を開いている状態で、使うボタンを押す
 				for (int bIndex = 0; bIndex < button_use_item.length; bIndex++) {
@@ -1348,6 +1407,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 					}
 				}
 				break;
+			case KeyEvent.VK_L:
+				pressedShowLogButton();
+				break;
 			case KeyEvent.VK_S:
 				if (!mSaveDataManager.writeSaveData()) {
 					System.out.println("save data fail");
@@ -1374,14 +1436,15 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 				}
 				break;
 			case KeyEvent.VK_C:
+				clear_show_window();
 				if (is_show_bag) {
 					//click close(on show-bag window)
-					clear_show_window();
 					is_show_bag = false;
 				} else if (is_show_trophy) {
 					//click close(on show-hint window)
-					clear_show_window();
 					is_show_trophy = false;
+				} else if (isShowLog) {
+					isShowLog = false;
 				}
 				break;
 			}
@@ -1443,12 +1506,20 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	 * およびshow-trophyボタンに対応するkeyが押されたときの処理をこの関数を呼ぶことで実行
 	 */
 	void func_pressed_show_trophy_button() {
+		clear_show_window();
 		if (is_show_trophy == true) {
 			is_show_trophy = false;
+		} else {
+			is_show_trophy = true;
+		}
+	}
+
+	private void pressedShowLogButton() {
+		if (isShowLog) {
 			clear_show_window();
 		} else {
 			clear_show_window();
-			is_show_trophy = true;
+			isShowLog = true;
 		}
 	}
 
@@ -1480,6 +1551,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			message.set(last_index, e1);
 			message.add("nothing");
 		}
+		logText.add(e1);
 	}
 
 	//アイテム使用によって、ほかのアイテムに影響が及ぶ場合はその処理を行いtrueを返す
