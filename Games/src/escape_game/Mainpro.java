@@ -761,6 +761,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			th = new Thread(this);
 			th.start();
 		}
+		if (now_field == japaneseStyleRoom2 && !japaneseStyleRoom2.getIsInputInfoEnabled()) {
+			return;
+		}
 		is_next = true;
 		screen_error = false;
 		Point point = e.getPoint();
@@ -902,6 +905,9 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			running = true;
 			th = new Thread(this);
 			th.start();
+		}
+		if (now_field == japaneseStyleRoom2 && !japaneseStyleRoom2.getIsInputInfoEnabled()) {
+			return;
 		}
 		is_next = true;
 		screen_error = false;

@@ -1,9 +1,13 @@
 package escape_game;
 
+import java.applet.AudioClip;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 //和室1(下側の方の和室)
 public class JapaneseStyleRoom2 extends Field {
@@ -50,11 +54,20 @@ public class JapaneseStyleRoom2 extends Field {
 	private static final String DOOR_TO_DK = "door_to_dk";
 	private static final String DOOR_TO_JSR1 = "door_to_jsr1";
 
+	private final String successBGM = "../sound_data/se_maoudamashii_system23.wav";
+	private final String failBGM = "../sound_data/se_maoudamashii_system25.wav";
+	private final String stepOnBGM = "../sound_data/se_maoudamashii_system44.wav";
+
 	//DKドアへの謎回答
 	private static final String[] CORRECT_TATAMI_LIST = { TATAMI_LEFT_TOP, TATAMI_LEFT_MIDDLE, TATAMI_LEFT_BOTTOM,
 			TATAMI_CENTER, TATAMI_RIGHT_TOP, TATAMI_RIGHT_BOTTOM };
 	private int targetAnsTatamiIndex = 0;
 	private boolean isCorrectAns = false;
+	private AtomicBoolean isInputInfoEnabled = new AtomicBoolean(true);
+
+	private Timer timer;
+	private TimerTask task;
+
 
 	private Mainpro mainpro;
 
@@ -310,6 +323,9 @@ public class JapaneseStyleRoom2 extends Field {
 				mainpro.message_add("(ピロリロリン♪↑)");
 				mainpro.message_add("なんだ、なんか音が鳴ったぞ");
 				mainpro.message_add("改めて今まで開かなかったドアを調べてみよう。");
+				stepOnTatami(successBGM);
+			} else {
+				stepOnTatami(stepOnBGM);
 			}
 		} else {
 			boolean stepedTatamiResetFlg = true;
@@ -322,6 +338,7 @@ public class JapaneseStyleRoom2 extends Field {
 				targetAnsTatamiIndex = 0;
 				mainpro.message_add("(テロテロン↓)");
 				mainpro.message_add("なにか、残念な感じの音が鳴ったな");
+				stepOnTatami(failBGM);
 			}
 		}
 	}
@@ -355,5 +372,33 @@ public class JapaneseStyleRoom2 extends Field {
 			trueFlags.add("isLogoHintLooking");
 		}
 		return trueFlags;
+	}
+
+	public boolean getIsInputInfoEnabled() {
+		return isInputInfoEnabled.get();
+	}
+
+	private void stepOnTatami(String bgm) {
+		if (isInputInfoEnabled.get() == true) {
+			isInputInfoEnabled.set(false);
+			timer = new Timer(false);
+			task = new TimerTask() {
+				@Override
+				public void run() {
+					if (isInputInfoEnabled.get() == false) {
+						timer.cancel();
+						isInputInfoEnabled.set(true);
+					}
+				}
+			};
+			timer.schedule(task, 1000);
+			playSound(bgm);
+		}
+	}
+
+	private void playSound(String filePath) {
+		URL codeBase = mainpro.getCodeBase();
+		AudioClip audio = mainpro.getAudioClip(codeBase, filePath);
+		audio.play();
 	}
 }
