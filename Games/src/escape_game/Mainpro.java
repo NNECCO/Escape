@@ -761,7 +761,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			th = new Thread(this);
 			th.start();
 		}
-		if (now_field == japaneseStyleRoom2 && !japaneseStyleRoom2.getIsInputInfoEnabled()) {
+		if ((now_field == japaneseStyleRoom2 && !japaneseStyleRoom2.getIsInputInfoEnabled())
+				|| (screenMode == "Ending")) {
 			return;
 		}
 		is_next = true;
@@ -901,7 +902,8 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 			th = new Thread(this);
 			th.start();
 		}
-		if (now_field == japaneseStyleRoom2 && !japaneseStyleRoom2.getIsInputInfoEnabled()) {
+		if ((now_field == japaneseStyleRoom2 && !japaneseStyleRoom2.getIsInputInfoEnabled())
+				|| (screenMode == "Ending")) {
 			return;
 		}
 		is_next = true;
