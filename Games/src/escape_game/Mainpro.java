@@ -811,12 +811,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						if (isItemStatusChanged(bag_index)) {
 							break;
 						}
-						String item = bag.get(bag_index);
-						//謎の紙を使用した場合
-						if (IconName.HINT_OF_HINT.equals(item))
-							zoom_hint_of_hint = true;
-						else
-							examine(item);
+						examineOrShowHint(bag_index);
 						clear_show_window();
 						is_show_bag = false;
 						break;
@@ -1355,7 +1350,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						if (isItemStatusChanged(bag_index)) {
 							break;
 						}
-						examine(bag.get(bag_index));
+						examineOrShowHint(bag_index);
 						clear_show_window();
 						is_show_bag = false;
 					}
@@ -1368,7 +1363,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						if (isItemStatusChanged(bag_index)) {
 							break;
 						}
-						examine(bag.get(bag_index));
+						examineOrShowHint(bag_index);
 						clear_show_window();
 						is_show_bag = false;
 					}
@@ -1381,7 +1376,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						if (isItemStatusChanged(bag_index)) {
 							break;
 						}
-						examine(bag.get(bag_index));
+						examineOrShowHint(bag_index);
 						clear_show_window();
 						is_show_bag = false;
 					}
@@ -1394,7 +1389,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						if (isItemStatusChanged(bag_index)) {
 							break;
 						}
-						examine(bag.get(bag_index));
+						examineOrShowHint(bag_index);
 						clear_show_window();
 						is_show_bag = false;
 					}
@@ -1407,7 +1402,7 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 						if (isItemStatusChanged(bag_index)) {
 							break;
 						}
-						examine(bag.get(bag_index));
+						examineOrShowHint(bag_index);
 						clear_show_window();
 						is_show_bag = false;
 					}
@@ -1467,6 +1462,17 @@ public class Mainpro extends Applet implements KeyListener, MouseListener, Mouse
 	public void keyReleased(KeyEvent e) {
 		// TODO 自動生成されたメソッド・スタブ
 
+	}
+
+	private void examineOrShowHint(int bagIndex) {
+		String item = bag.get(bagIndex);
+		//謎の紙を使用した場合
+		if (IconName.HINT_OF_HINT.equals(item)) {
+			zoom_hint_of_hint = true;
+		}
+		else {
+			examine(item);
+		}
 	}
 
 	/*
