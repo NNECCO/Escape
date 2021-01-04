@@ -4,11 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 
@@ -30,7 +27,7 @@ public class Ending {
 	 * エンドカードを表示する閾値(最後の「制作：ゲー研」が上に消えてちょっとしてから)
 	 */
 	private int threshold_Endcard;
-	
+
 	private Sequencer bgmEndroll;
 	private Sequence sequence_Endroll;
 	private final String path_BgmEndroll = "../sound_data/game_maoudamashii_3_theme13.mid";
@@ -43,21 +40,21 @@ public class Ending {
 	public boolean getPlayEndroll() { return playEndroll; }
 	private boolean playEndcard;
 	public boolean getPlayEndcard() { return playEndcard; }
-	
+
 	private final int speed = 3;
-	private final String KIKAKU = "企画：/Ultimate D.T";
-	private final String SENARIO = "シナリオ：/Ultimate D.T";
-	private final String DESIGN_CHARACTER = "キャラクターデザイン：/Ultimate D.T";
-	private final String DESIGN_OBJECT = "オブジェクトデザイン：/Ultimate D.T/R.M";
-	private final String BACKGROUND = "背景：/Ultimate D.T/R.M";
-	private final String PROGRAM = "プログラム：/Ultimate D.T/NNECCO";
-	private final String BGM_TITLE = "タイトルBGM:/〇";
-	private final String BGM_ENDING = "エンディングBGM:/〇";
-	private final String SOUND_EFFECT = "サウンドエフェクト：/〇";
+	private final String KIKAKU = "企画：/Ultimate D.T.";
+	private final String SENARIO = "シナリオ：/Ultimate D.T.";
+	private final String DESIGN_CHARACTER = "キャラクターデザイン：/Y.N./Ultimate D.T.";
+	private final String DESIGN_OBJECT = "オブジェクトデザイン：/Y.N./R.M./Ultimate D.T.";
+	private final String BACKGROUND = "背景：/Y.N./R.M./Ultimate D.T.";
+	private final String PROGRAM = "プログラム：/Ultimate D.T./NNECCO";
+	private final String BGM_TITLE = "タイトルBGM:/魔王魂様(フリー音楽素材)";
+	private final String BGM_ENDING = "エンディングBGM:/魔王魂様(フリー音楽素材)";
+	private final String SOUND_EFFECT = "サウンドエフェクト：/魔王魂様(フリー音楽素材)";
 	private final String SEISAKU = "制作：/ゲー研";
 	private final String[] List_str = {KIKAKU, SENARIO, DESIGN_CHARACTER, DESIGN_OBJECT, BACKGROUND,
 										PROGRAM, BGM_TITLE, BGM_ENDING, SOUND_EFFECT, SEISAKU};
-			
+
 	Ending(Mainpro mainpro, int drawScreenX, int drawScreenY) {
 		this.mainpro = mainpro;
 		this.drawScreenX = drawScreenX;
@@ -83,7 +80,7 @@ public class Ending {
 		playEndroll = false;
 		playEndcard = false;
 	}
-	
+
 	public void paint(Mainpro mainpro) {
 		if(Y_drawStart < -threshold_Endcard) {
 			if(!playEndcard) {
@@ -100,12 +97,12 @@ public class Ending {
 				bgmEndroll.start();
 				playEndroll = true;
 			}
-			
+
 			//背景を黒色にする
 			mainpro.buffer.fillRect(0, 0, drawScreenX, drawScreenY);
 			mainpro.buffer.setFont(new Font(font, Font.PLAIN, fontSize));
 			mainpro.buffer.setColor(Color.WHITE);
-			
+
 			String str;
 			String[] ss;
 			//改行の数
