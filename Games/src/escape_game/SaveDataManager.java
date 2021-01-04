@@ -60,7 +60,7 @@ public class SaveDataManager {
 						} else if (dataLabel.equals("field")) {
 							Field field = mMainpro.getField(dataContent);
 							if (field == null) { //field取得失敗
-								System.out.println("fieldの取得に失敗しました。");
+//								System.out.println("fieldの取得に失敗しました。");
 								return false;
 							}
 							mMainpro.now_field = field;
@@ -96,7 +96,7 @@ public class SaveDataManager {
 								}
 							}
 						} else { //設定されていないラベルがファイルに書かれている場合
-							System.out.println("設定されていないラベル名がファイルに記述されています");
+//							System.out.println("設定されていないラベル名がファイルに記述されています");
 							return false;
 						}
 					}
@@ -122,7 +122,7 @@ public class SaveDataManager {
 			return false;
 		} else {
 			// セーブデータの生成
-			System.out.println("data save : savedata creating...");
+//			 System.out.println("data save : savedata creating...");
 
 			ArrayList<String> saveDataList = new ArrayList<String>();
 
@@ -136,21 +136,21 @@ public class SaveDataManager {
 			saveDataList.add("END");
 
 			// 生成したセーブデータを出力
-			for (int index = 0; index < saveDataList.size(); index++) {
-				System.out.println("[" + (index + 1) + "行目] :" + saveDataList.get(index));
-			}
+//			for (int index = 0; index < saveDataList.size(); index++) {
+//				System.out.println("[" + (index + 1) + "行目] :" + saveDataList.get(index));
+//			}
 			// セーブファイルに書き込む
 			BufferedWriter saveData = null;
 			try {
 				saveData = new BufferedWriter(new FileWriter("../savedata/escape_game/savedata.txt"));
-				System.out.println("data save : saving...");
+//				System.out.println("data save : saving...");
 				for (int saveListIndex = 0; saveListIndex < saveDataList.size(); saveListIndex++) {
 					saveData.write(saveDataList.get(saveListIndex));
 					saveData.newLine();
 				}
-				System.out.println("data save : complete!");
+//				System.out.println("data save : complete!");
 			} catch (Exception e) {
-				System.out.println("data save : failed(x_x)");
+//				System.out.println("data save : failed(x_x)");
 				e.printStackTrace();
 			} finally {
 				try {

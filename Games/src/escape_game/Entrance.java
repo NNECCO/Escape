@@ -56,9 +56,9 @@ public class Entrance extends Field {
 
 					@Override
 					public void ok() {
-						if (dialog == null) {
-							System.out.println("error: not found dialog");
-						}
+//						if (dialog == null) {
+//							System.out.println("error: not found dialog");
+//						}
 
 						String[] selections = dialog.getSelections();
 						int[] selectionIndex = dialog.getSelectionIndex();
@@ -66,24 +66,25 @@ public class Entrance extends Field {
 
 						for (int index = 0; index < answers.length; index++) {
 							String tgtSelection = selections[selectionIndex[index]];
-							System.out.println("selections[" + index + "]: " + tgtSelection + ", answers[" + index
-									+ "]: " + answers[index]);
+//							System.out.println("selections[" + index + "]: " + tgtSelection + ", answers[" + index
+//									+ "]: " + answers[index]);
 
 							if (!tgtSelection.equals(answers[index])) {
-								System.out.println("password-mismatch...");
+//								System.out.println("password-mismatch...");
 								return;
 							}
 						}
 						opened = true;
 						// mainpro.message_add("(ピー...ガチャッ)");
 						// mainpro.message_add("やった、ドアが開いたぞ！！");
-						System.out.println("password-match!!!");
+//						System.out.println("password-match!!!");
 					}
 
 					@Override
 					public void cancel() {
 						// mainpro.message_add("何も起こらない、パスワードが違うのだろうか。。。");
-						System.out.println("cancel");
+//						System.out.println("cancel");
+						latd = false;
 					}
 				});
 			}
